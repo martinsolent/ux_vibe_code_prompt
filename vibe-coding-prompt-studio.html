@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibe-Coding Prompt Studio</title>
+<meta name="description" content="One prompt studio for UX students: Level 1 guided prompt builder and Level 2 open scenario studio, for the free and Pro Claude plans.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--panel-2:#1c2128;--border:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --accent:#58a6ff;--accent-bg:rgba(56,139,253,.15);--green:#3fb950;--green-bg:rgba(46,160,67,.15);
+  --orange:#d29922;--orange-bg:rgba(187,128,9,.15);--purple:#bc8cff;--purple-bg:rgba(163,113,247,.15);
+  --red:#f85149;--red-bg:rgba(248,81,73,.15);--code-bg:#0b0f14;--shadow:0 8px 24px rgba(0,0,0,.35);
+  --radius:10px;--sans:'DM Sans',system-ui,-apple-system,Segoe UI,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#ffffff;--panel:#f6f8fa;--panel-2:#eef1f4;--border:#d0d7de;--text:#1f2328;--muted:#59636e;
+    --accent:#0969da;--accent-bg:#ddf4ff;--green:#1a7f37;--green-bg:#dafbe1;--orange:#9a6700;--orange-bg:#fff8c5;
+    --purple:#8250df;--purple-bg:#fbefff;--red:#cf222e;--red-bg:#ffebe9;--code-bg:#f6f8fa;--shadow:0 8px 24px rgba(140,149,159,.2);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#ffffff;--panel:#f6f8fa;--panel-2:#eef1f4;--border:#d0d7de;--text:#1f2328;--muted:#59636e;
+  --accent:#0969da;--accent-bg:#ddf4ff;--green:#1a7f37;--green-bg:#dafbe1;--orange:#9a6700;--orange-bg:#fff8c5;
+  --purple:#8250df;--purple-bg:#fbefff;--red:#cf222e;--red-bg:#ffebe9;--code-bg:#f6f8fa;--shadow:0 8px 24px rgba(140,149,159,.2);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6}
+a{color:var(--accent)}
+code,kbd,pre,.mono{font-family:var(--mono);font-size:.88em}
+code{background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#fff;padding:8px 12px;border-radius:6px;z-index:100}
+.skip:focus{left:8px}
+
+/* Top bar */
+header.bar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+.bar-inner{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.brand{font-weight:700;white-space:nowrap;font-size:15px}
+.brand span{color:var(--accent)}
+nav.toc{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:6px;white-space:nowrap}
+nav.toc a:hover{color:var(--text);background:var(--panel)}
+.icon-btn{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+
+main{max-width:1080px;margin:0 auto;padding:0 16px 80px}
+section{padding-top:40px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:32px 0 12px;letter-spacing:-.02em}
+h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+h3{font-size:18px;margin:0 0 6px}
+.lede{color:var(--muted);font-size:18px;max-width:720px;margin:0 0 20px}
+.sec-intro{color:var(--muted);margin:0 0 20px;max-width:760px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card p{margin:.3em 0}
+.card ul{margin:.4em 0;padding-left:20px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--mono);padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted);white-space:nowrap}
+.pill.blue{color:var(--accent);background:var(--accent-bg);border-color:transparent}
+.pill.green{color:var(--green);background:var(--green-bg);border-color:transparent}
+.pill.orange{color:var(--orange);background:var(--orange-bg);border-color:transparent}
+.pill.purple{color:var(--purple);background:var(--purple-bg);border-color:transparent}
+.pill.red{color:var(--red);background:var(--red-bg);border-color:transparent}
+
+.callout{border-left:4px solid var(--accent);background:var(--accent-bg);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.warn{border-color:var(--orange);background:var(--orange-bg)}
+.callout.good{border-color:var(--green);background:var(--green-bg)}
+.callout p{margin:.2em 0}
+
+/* Stepper */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:18px 0 6px;counter-reset:f}
+.flow div{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:14px;position:relative}
+.flow div::before{counter-increment:f;content:counter(f);display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--bg);font-weight:700;font-size:12px;margin-right:6px}
+.flow b{display:inline}
+
+/* Buttons & forms */
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px;font-weight:500;text-decoration:none}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn.primary:hover{filter:brightness(1.1)}
+.btn.green{background:var(--green);border-color:var(--green);color:var(--bg)}
+.btn.red{background:transparent;border-color:var(--red);color:var(--red)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn[aria-pressed="true"]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+label.f{display:block;font-weight:500;font-size:14px;margin:12px 0 4px}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],textarea,select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font:inherit;font-size:15px}
+textarea{min-height:80px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-bg)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6px 0;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+
+/* Prompt output */
+.prompt{position:relative;background:var(--code-bg);border:1px solid var(--border);border-radius:var(--radius);padding:16px;font-family:var(--mono);font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word;max-height:520px;overflow:auto}
+.copy-wrap{position:relative}
+.copy-wrap .btn{position:absolute;top:8px;right:8px}
+.hl{color:var(--accent);font-weight:600}
+
+/* Design system cards */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.ds-card{display:flex;flex-direction:column;gap:8px;cursor:default;transition:border-color .15s}
+.ds-card.selected{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.ds-card h3{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.ds-card .tags{display:flex;gap:6px;flex-wrap:wrap}
+.ds-card dl{margin:0;font-size:14px}
+.ds-card dt{font-weight:600;margin-top:6px}
+.ds-card dd{margin:0;color:var(--muted)}
+.ds-card .row{margin-top:auto;padding-top:8px}
+.current-ds{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px dashed var(--border);border-radius:var(--radius);padding:10px 14px;margin-bottom:16px;font-size:14px}
+.current-ds strong{color:var(--accent)}
+
+.preview-box{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:#fff;margin-top:14px}
+.preview-head{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--panel);padding:8px 12px;font-size:13px;color:var(--muted);border-bottom:1px solid var(--border)}
+.preview-box iframe{width:100%;height:380px;border:0;display:block;background:#fff}
+
+table.cmp{width:100%;border-collapse:collapse;font-size:14px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}
+table.cmp th{color:var(--muted);font-weight:600;font-size:13px}
+.table-scroll{overflow-x:auto}
+
+/* Activities */
+details.act{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px}
+details.act[open]{border-color:color-mix(in srgb,var(--accent) 50%,var(--border))}
+details.act summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center}
+details.act summary::-webkit-details-marker{display:none}
+.act-num{flex:none;width:34px;height:34px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;background:var(--panel-2);border:1px solid var(--border)}
+.act.done .act-num{background:var(--green);color:var(--bg);border-color:var(--green)}
+.act-title{flex:1;min-width:0}
+.act-title b{display:block}
+.act-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.chev{transition:transform .2s;color:var(--muted)}
+details[open] .chev{transform:rotate(90deg)}
+.act-body{padding:0 16px 16px 62px}
+.act-body h4{margin:14px 0 4px;font-size:14px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.act-body ol,.act-body ul{padding-left:20px;margin:4px 0}
+.act-body li{margin:3px 0}
+.progress{height:8px;background:var(--panel-2);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
+.progress span{display:block;height:100%;background:var(--green);width:0;transition:width .3s}
+.mini-prompt{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;margin:6px 0;position:relative;padding-right:70px}
+.mini-prompt .btn{position:absolute;top:6px;right:6px}
+
+/* Library */
+.lib-card .prompt{max-height:none;font-size:12.5px;padding-right:70px}
+
+/* Logger */
+.timer{font-family:var(--mono);font-size:40px;font-weight:600;letter-spacing:.02em}
+.timer.running{color:var(--green)}
+.log-table td,.log-table th{font-size:13px}
+.empty{color:var(--muted);text-align:center;padding:18px;font-size:14px}
+
+footer{border-top:1px solid var(--border);margin-top:60px;padding:20px 16px;text-align:center;color:var(--muted);font-size:13px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;transition:transform .25s;z-index:200;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:600px){
+  .act-body{padding:0 16px 16px}
+  .brand{display:none}
+  .timer{font-size:32px}
+}
+@media print{
+  header.bar,.btn,.filters,.preview-box,.no-print,.toast{display:none!important}
+  body{background:#fff;color:#000}
+  details.act{break-inside:avoid}
+  details.act .act-body{display:block}
+  .card,.prompt{border-color:#ccc}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---- level 2 ---- */
+
+:root{
+  --bg:#0d1117;--panel:#161b22;--panel-2:#1c2128;--border:#30363d;--text:#e6edf3;--muted:#8b949e;
+  --accent:#58a6ff;--accent-bg:rgba(56,139,253,.15);--green:#3fb950;--green-bg:rgba(46,160,67,.15);
+  --orange:#d29922;--orange-bg:rgba(187,128,9,.15);--purple:#bc8cff;--purple-bg:rgba(163,113,247,.15);
+  --red:#f85149;--red-bg:rgba(248,81,73,.15);--code-bg:#0b0f14;
+  --radius:10px;--sans:'DM Sans',system-ui,-apple-system,Segoe UI,sans-serif;--mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#ffffff;--panel:#f6f8fa;--panel-2:#eef1f4;--border:#d0d7de;--text:#1f2328;--muted:#59636e;
+    --accent:#0969da;--accent-bg:#ddf4ff;--green:#1a7f37;--green-bg:#dafbe1;--orange:#9a6700;--orange-bg:#fff8c5;
+    --purple:#8250df;--purple-bg:#fbefff;--red:#cf222e;--red-bg:#ffebe9;--code-bg:#f6f8fa;color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#ffffff;--panel:#f6f8fa;--panel-2:#eef1f4;--border:#d0d7de;--text:#1f2328;--muted:#59636e;
+  --accent:#0969da;--accent-bg:#ddf4ff;--green:#1a7f37;--green-bg:#dafbe1;--orange:#9a6700;--orange-bg:#fff8c5;
+  --purple:#8250df;--purple-bg:#fbefff;--red:#cf222e;--red-bg:#ffebe9;--code-bg:#f6f8fa;color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.6}
+a{color:var(--accent)}
+code{font-family:var(--mono);font-size:.88em;background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:1px 5px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:#fff;padding:8px 12px;border-radius:6px;z-index:100}
+.skip:focus{left:8px}
+.sr{position:absolute;left:-9999px}
+header.bar{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--border)}
+.bar-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:10px 16px}
+.brand{font-weight:700;white-space:nowrap;font-size:15px}
+.brand span{color:var(--purple)}
+nav.toc{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:none}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{color:var(--muted);text-decoration:none;font-size:14px;padding:6px 10px;border-radius:6px;white-space:nowrap}
+nav.toc a:hover{color:var(--text);background:var(--panel)}
+.icon-btn{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:14px}
+main{max-width:1120px;margin:0 auto;padding:0 16px 80px}
+section{padding-top:44px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:32px 0 12px;letter-spacing:-.02em}
+h2{font-size:26px;margin:0 0 6px;letter-spacing:-.01em}
+h3{font-size:17px;margin:0 0 6px}
+.lede{color:var(--muted);font-size:18px;max-width:760px;margin:0 0 20px}
+.sec-intro{color:var(--muted);margin:0 0 20px;max-width:780px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin-bottom:6px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+@media (max-width:860px){.split{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:18px}
+.card p{margin:.3em 0}
+.card ul{margin:.4em 0;padding-left:20px}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-family:var(--mono);padding:2px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted);white-space:nowrap}
+.pill.blue{color:var(--accent);background:var(--accent-bg);border-color:transparent}
+.pill.green{color:var(--green);background:var(--green-bg);border-color:transparent}
+.pill.orange{color:var(--orange);background:var(--orange-bg);border-color:transparent}
+.pill.purple{color:var(--purple);background:var(--purple-bg);border-color:transparent}
+.pill.red{color:var(--red);background:var(--red-bg);border-color:transparent}
+.callout{border-left:4px solid var(--accent);background:var(--accent-bg);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0}
+.callout.warn{border-color:var(--orange);background:var(--orange-bg)}
+.callout p{margin:.2em 0}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel-2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px;font-weight:500;text-decoration:none}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.btn.purple{background:var(--purple);border-color:var(--purple);color:var(--bg)}
+.btn.red{background:transparent;border-color:var(--red);color:var(--red)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+label.f{display:block;font-weight:500;font-size:14px;margin:12px 0 4px}
+label.f small{font-weight:400;color:var(--muted)}
+input[type=text],textarea,select{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:9px 11px;font:inherit;font-size:15px}
+textarea{min-height:80px;resize:vertical}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-bg)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:14px;margin:6px 0;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--accent);width:16px;height:16px;flex:none}
+
+/* Scenario */
+.scenario{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0}
+.slot{background:var(--bg);border:1px dashed var(--border);border-radius:8px;padding:10px 12px}
+.slot b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--purple)}
+.slot span{font-size:15px}
+.slot.lock{border-style:solid;border-color:var(--purple)}
+.slot button{float:right;background:none;border:0;color:var(--muted);cursor:pointer;font-size:13px;padding:0}
+
+/* Decks */
+.deck{margin-top:16px}
+.deck-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:8px}
+.deck-head h3{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:999px;padding:6px 12px;font:inherit;font-size:14px;cursor:pointer}
+.chip:hover{border-color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);font-weight:500}
+.deck.app .chip[aria-pressed="true"]{background:var(--purple-bg);border-color:var(--purple);color:var(--purple)}
+.deck.st .chip[aria-pressed="true"]{background:var(--orange-bg);border-color:var(--orange);color:var(--orange)}
+.deck.fn .chip[aria-pressed="true"]{background:var(--green-bg);border-color:var(--green);color:var(--green)}
+.hint{font-size:13px;color:var(--muted);min-height:20px;margin-top:6px}
+.cv-group{margin:26px 0 10px;font-size:15px;font-family:var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--purple)}
+.fc{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px;margin-bottom:10px;transition:border-color .2s}
+.fc.ok{border-color:color-mix(in srgb,var(--green) 55%,var(--border))}
+.fnum{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;font-size:13px;background:var(--panel-2);border:1px solid var(--border)}
+.fc.ok .fnum{background:var(--green);color:var(--bg);border-color:var(--green)}
+.fq{color:var(--muted);font-size:14px;margin:0 0 8px}
+.fb{font-size:13px;margin-top:6px;color:var(--muted);min-height:0}
+.fb.ok{color:var(--green)}.fb.warn{color:var(--orange)}.fb.tip{color:var(--accent)}
+details.ex{margin-top:6px}details.ex summary{cursor:pointer;font-size:13px;color:var(--muted)}
+details.ex ul{font-size:13px;color:var(--muted);margin:6px 0 0;padding-left:20px}
+.chip.starter{font-size:13px;padding:4px 10px;border-style:dashed}
+@media (max-width:600px){.fc{grid-template-columns:1fr}.fnum{display:none}}
+.warn-line{font-size:13px;color:var(--orange);margin-top:6px}
+
+/* Workspace */
+#workspace{min-height:380px;font-family:var(--mono);font-size:13px;line-height:1.55}
+.gate{list-style:none;padding:0;margin:10px 0 0}
+.gate li{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:14px}
+.gate li:last-child{border-bottom:0}
+.gate .ic{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;border:1.5px solid var(--border);color:var(--muted)}
+.gate li.ok .ic{background:var(--green);border-color:var(--green);color:var(--bg)}
+.gate li .tip{display:block;color:var(--muted);font-size:13px}
+.gate li.ok .tip{display:none}
+.score{display:flex;align-items:center;gap:12px}
+.score-num{font-family:var(--mono);font-size:28px;font-weight:600}
+.meter{flex:1;height:10px;background:var(--panel-2);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.meter span{display:block;height:100%;width:0;background:var(--red);transition:width .25s,background .25s}
+
+/* Patterns */
+.pat{display:flex;flex-direction:column;gap:8px}
+.pat .tpl{background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;flex:1}
+.hl{color:var(--accent);font-weight:600}
+
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t th,table.t td{border-bottom:1px solid var(--border);padding:9px 8px;text-align:left;vertical-align:top}
+table.t th{color:var(--muted);font-weight:600;font-size:13px}
+.table-scroll{overflow-x:auto}
+
+/* Challenges */
+details.ch{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:10px}
+details.ch summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center}
+details.ch summary::-webkit-details-marker{display:none}
+.lvl{flex:none;width:38px;height:38px;border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-weight:600;background:var(--panel-2);border:1px solid var(--border)}
+.ch.done .lvl{background:var(--green);color:var(--bg);border-color:var(--green)}
+.ch-title{flex:1;min-width:0}
+.ch-title b{display:block}
+.chev{color:var(--muted);transition:transform .2s}
+details[open] .chev{transform:rotate(90deg)}
+.ch-body{padding:0 16px 16px 66px}
+.ch-body h4{margin:12px 0 4px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.ch-body ul{padding-left:20px;margin:4px 0}
+@media (max-width:600px){.ch-body{padding:0 16px 16px}.brand{display:none}}
+
+/* Journal */
+.entry{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-top:10px}
+.entry .meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.entry pre{white-space:pre-wrap;font-family:var(--mono);font-size:12px;background:var(--code-bg);border:1px solid var(--border);border-radius:6px;padding:8px;margin:6px 0;max-height:140px;overflow:auto}
+.entry p{margin:4px 0;font-size:14px}
+.empty{color:var(--muted);text-align:center;padding:18px;font-size:14px}
+
+footer{border-top:1px solid var(--border);margin-top:60px;padding:20px 16px;text-align:center;color:var(--muted);font-size:13px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:8px 16px;border-radius:8px;font-size:14px;font-weight:500;transition:transform .25s;z-index:200;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+@media print{header.bar,.btn,.chip,.toast{display:none!important}body{background:#fff;color:#000}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+
+
+/* ---- dictation ---- */
+.mic-wrap{position:relative}
+.mic-wrap>input,.mic-wrap>textarea{padding-right:46px}
+.mic-btn{position:absolute;top:7px;right:7px;width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--panel-2);color:var(--muted);display:grid;place-items:center;cursor:pointer;padding:0}
+.mic-wrap>input+.mic-btn{top:50%;margin-top:-15px}
+.mic-btn:hover{color:var(--text);border-color:var(--muted)}
+.mic-btn.on{background:var(--red);border-color:var(--red);color:#fff;animation:micpulse 1.2s ease-in-out infinite}
+.mic-wrap.listening>input,.mic-wrap.listening>textarea{border-color:var(--red);box-shadow:0 0 0 3px rgba(248,81,73,.18)}
+@keyframes micpulse{0%,100%{box-shadow:0 0 0 0 rgba(248,81,73,.55)}50%{box-shadow:0 0 0 7px rgba(248,81,73,0)}}
+@media (prefers-reduced-motion:reduce){.mic-btn.on{animation:none}}
+@media print{.mic-btn,.dictate-hint{display:none!important}}
+
+
+.link-btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.link-btn:hover{border-color:var(--muted)}
+/* ---- combined studio ---- */
+html{scroll-padding-top:116px}
+.bar-inner{flex-wrap:wrap}
+.bar-nav{padding-top:0;padding-bottom:8px}
+.seg-ctl{display:inline-flex;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:3px}
+.seg-ctl button{background:none;border:0;color:var(--muted);font:inherit;font-size:14px;font-weight:500;padding:5px 12px;border-radius:7px;cursor:pointer}
+.seg-ctl button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.seg-ctl.plan button[aria-pressed="true"]{background:var(--purple)}
+body[data-level="1"] [data-level="2"],body[data-level="2"] [data-level="1"],
+body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"]{display:none!important}
+</style>
+</head>
+<body data-level="1" data-plan="free">
+<a class="skip" href="#main">Skip to content</a>
+<header class="bar">
+  <div class="bar-inner">
+    <div class="brand">VibeProto<span> · Prompt Studio</span></div>
+    <div style="flex:1"></div>
+    <div class="seg-ctl" role="group" aria-label="Level"><button data-setlevel="1" aria-pressed="true">Level 1</button><button data-setlevel="2" aria-pressed="false">Level 2</button></div>
+    <div class="seg-ctl plan" role="group" aria-label="Claude plan"><button data-setplan="free" aria-pressed="true">Free</button><button data-setplan="pro" aria-pressed="false">Pro</button></div>
+    <a class="icon-btn link-btn" id="toAudio" href="index.html" target="_blank" rel="noopener" title="Open the narrated audio guide in a new tab">🎧 Audio guide</a>
+    <button class="icon-btn" id="resetBtn" title="Clear everything you've entered and start again">↺ Reset</button>
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle colour theme">◐</button>
+  </div>
+  <div class="bar-inner bar-nav"><nav class="toc" aria-label="Sections"><a href="#start">Start</a><a href="#plan">Your plan</a><a href="#compose" data-level="2">Scenario</a><a href="#ds">Design systems</a><a href="#builder" data-level="1">Prompt builder</a><a href="#library" data-level="1">Prompt library</a><a href="#settings" data-level="2">Build settings</a><a href="#project" data-level="2" data-plan="pro">Project kit</a><a href="#work" data-level="2">Workspace</a><a href="#patterns" data-level="2">Patterns</a><a href="#fake" data-level="2">Fake it</a><a href="#help">Troubleshooting</a></nav></div>
+</header>
+
+<main id="main">
+<section id="start">
+<div data-level="1">
+  <div class="eyebrow ed-label"></div>
+  <h1>Vibe-code your first prototype</h1>
+  <p class="lede">You don't need to code. You'll describe a prototype in plain English and let Claude build it on top of a real open-source design system. The skill you're practising is <strong>specifying and steering</strong>, not programming.</p>
+
+  <div class="flow" aria-label="Workflow">
+    <div><b>Pick</b> a design system</div>
+    <div><b>Plan</b> the task &amp; screens</div>
+    <div><b>Prompt</b> Claude for v1</div>
+    <div><b>Fix</b> in small steps</div>
+    <div><b>Finish</b> &amp; share</div>
+  </div>
+
+  <div class="grid g3" style="margin-top:18px">
+    <div class="card">
+      <h3>What "vibe coding" means here</h3>
+      <p class="small muted">Describing what you want, judging what comes back, and steering with feedback — like briefing a developer. Claude writes the HTML; you own the UX decisions.</p>
+    </div>
+    <div class="card">
+      <h3>What you'll produce</h3>
+      <p class="small muted">One self-contained <code>.html</code> prototype that someone can click through, plus the prompt you used and a short plain-English description of it.</p>
+    </div>
+    <div class="card">
+      <h3>The golden rule</h3>
+      <p class="small muted">Build only what the main task needs. A prototype is a sketch you can click, not a finished product.</p>
+    </div>
+  </div>
+</div>
+<div data-level="2">
+  <div class="eyebrow ed-label"></div>
+  <h1>Prompt Studio: design your own prototypes</h1>
+  <p class="lede">In Level 1 you followed a recipe. Here you write your own. Start from your own idea, for any kind of app, feature, tool or situation, and build it up with coaching at every step. Then shape the prompt yourself and check its quality before you spend a message on it.</p>
+  <div class="grid g3">
+    <div class="card"><span class="pill purple">1 · Define</span><p class="small muted" style="margin-top:8px">Describe your own scenario on the canvas, with a coaching question, examples and live feedback for each part. Stuck? Let Claude interview you.</p></div>
+    <div class="card"><span class="pill blue">2 · Craft</span><p class="small muted" style="margin-top:8px">Edit the assembled prompt freely, or write one from scratch. Add proven prompt patterns. The quality gate scores it live.</p></div>
+    <div class="card"><span class="pill green">3 · Build</span><p class="small muted" style="margin-top:8px">Send it to Claude, judge the result, and steer it with small, precise follow-up prompts.</p></div>
+  </div>
+  <div class="callout"><p><strong>Same rules as Level 1:</strong> one self-contained HTML file and fake data only. What changes is that <em>you</em> decide the scope, and you must be able to explain every decision.</p></div>
+</div>
+</section>
+
+<section id="plan">
+<div data-level="1" data-plan="free">
+  <div class="eyebrow">Before you start</div>
+  <h2>Working on the free Claude plan</h2>
+  <p class="sec-intro">The free plan includes <strong>Artifacts</strong> — the live preview panel where your prototype appears — and you can publish an artifact as a shareable link. The catch is usage: free accounts get a usage budget that refills over a rolling window of a few hours, and big files and long chats use it up fastest. Anthropic doesn't publish a fixed message count, so plan as if every message matters.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>✅ Setup checklist</h3>
+      <label class="check"><input type="checkbox" data-setup="f1"> Signed in at <code>claude.ai</code> with your own account</label>
+      <label class="check"><input type="checkbox" data-setup="f2"> Checked <em>Settings</em> → Artifacts is switched on (so a preview panel appears)</label>
+      <label class="check"><input type="checkbox" data-setup="f3"> Created a folder for your prototype versions (v1, v2, v3…)</label>
+      <label class="check"><input type="checkbox" data-setup="f4"> Chosen a design system (below)</label>
+      <label class="check"><input type="checkbox" data-setup="f5"> Written your main task and screens <em>before</em> opening Claude</label>
+    </div>
+    <div class="card">
+      <h3>💡 Make your budget last</h3>
+      <ul class="small">
+        <li><strong>Think first, prompt second.</strong> Use the prompt builder so your first message is complete.</li>
+        <li><strong>One change per message</strong> — but batch related tweaks ("fix these three labels").</li>
+        <li><strong>Start a fresh chat</strong> when a conversation gets long; paste a summary (see the "Handover" prompt).</li>
+        <li><strong>Download every working version</strong> before asking for changes — you can always go back.</li>
+        <li><strong>Hit the limit?</strong> Use the wait to click through what you have, or to plan your next prompts on paper.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout warn">
+    <p><strong>Privacy:</strong> never paste real personal data, names or private information into Claude. Use invented content for the prototype.</p>
+  </div>
+</div>
+<div data-level="1" data-plan="pro">
+  <div class="eyebrow">Before you start</div>
+  <h2>Working on Claude Pro</h2>
+  <p class="sec-intro">Pro ($20 a month) gives you at least five times the free plan's usage in each rolling 5-hour session, with a separate weekly cap on top, and unlocks unlimited <strong>Projects</strong>. A Project keeps your rules in one place, so every chat inside it starts already briefed. Anthropic doesn't publish exact message counts, so still plan your prompts.</p>
+  <div class="grid g2">
+    <div class="card">
+      <h3>✅ Setup checklist</h3>
+      <label class="check"><input type="checkbox" data-setup="p1"> Signed in at <code>claude.ai</code> on a Pro account</label>
+      <label class="check"><input type="checkbox" data-setup="p2"> Checked <em>Settings</em> → Artifacts is switched on</label>
+      <label class="check"><input type="checkbox" data-setup="p3"> Chosen a design system and filled in the prompt builder</label>
+      <label class="check"><input type="checkbox" data-setup="p4"> Created a <strong>Project</strong> named after your prototype</label>
+      <label class="check"><input type="checkbox" data-setup="p5"> Pasted the Project instructions (below) into it</label>
+      <label class="check"><input type="checkbox" data-setup="p6"> Created a folder for your versions (v1, v2, v3…)</label>
+    </div>
+    <div class="card">
+      <h3>💡 What Pro changes</h3>
+      <ul class="small">
+        <li><strong>Projects hold the rules.</strong> Format, design system and accessibility rules live in the Project, so each new chat starts already briefed.</li>
+        <li><strong>One chat per version.</strong> Start a fresh chat in the Project for v2 and v3, and attach the latest HTML. Shorter chats stay faster and more accurate.</li>
+        <li><strong>Room to try alternatives.</strong> Unsure about a screen? Ask for a second version and compare the two.</li>
+        <li><strong>Models:</strong> the default model is fine for building. The most capable one uses your allowance faster, so save it for stubborn problems.</li>
+        <li><strong>Weekly cap:</strong> spread the work across the week rather than one long evening.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h3 style="margin:0">Project instructions</h3>
+      <button class="btn primary sm" data-copy="#projInstr1">Copy instructions</button>
+    </div>
+    <p class="small muted" style="margin:0 0 10px">Paste this into your Project's instructions. It updates when you choose a design system or fill in the prompt builder.</p>
+    <div class="prompt" id="projInstr1"></div>
+  </div>
+  <div class="callout warn"><p><strong>Privacy:</strong> never paste real personal data, names or private information into Claude. Anything in a Project is reused in every chat inside it.</p></div>
+</div>
+<div data-level="2" data-plan="free">
+  <div class="eyebrow">Free plan</div>
+  <h2>Making open prompting work on the free plan</h2>
+  <p class="sec-intro">The free plan includes artifacts and publishing, but usage refills over a rolling few-hour window, and Anthropic doesn't publish exact numbers. Open-ended prompting burns budget fastest, so these habits matter more at Level 2.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Gate before you send</h3><p class="small muted">Aim for 8/10 on build prompts. Every missing ingredient tends to cost a follow-up message.</p></div>
+    <div class="card"><h3>Small builds</h3><p class="small muted">Three or four features per build. Prove one flow works, then add the next in a new prompt.</p></div>
+    <div class="card"><h3>Ask, then build</h3><p class="small muted">"Ask me up to 3 questions first" costs one short exchange and often saves a full rebuild.</p></div>
+    <div class="card"><h3>Fresh chats</h3><p class="small muted">Long chats cost more per message. Start a new chat with the latest HTML attached and a short summary.</p></div>
+    <div class="card"><h3>Download every version</h3><p class="small muted">Experiments go wrong. A saved file means "revert" costs nothing.</p></div>
+    <div class="card"><h3>Out of budget?</h3><p class="small muted">Use the wait: click through what you have and draft your next prompts here.</p></div>
+  </div>
+</div>
+<div data-level="2" data-plan="pro">
+  <div class="eyebrow">Claude Pro</div>
+  <h2>Making open prompting work on Claude Pro</h2>
+  <p class="sec-intro">Pro ($20 a month) gives at least five times the free plan's usage in each rolling 5-hour session, with a separate weekly cap, plus unlimited Projects, Research and Claude Code. Anthropic doesn't publish exact numbers. More room doesn't make vague prompts better; it lets good prompts go further.</p>
+  <div class="grid g3">
+    <div class="card"><h3>Projects hold the rules</h3><p class="small muted">Put the format, design system and accessibility rules in Project instructions once, instead of repeating them in every prompt.</p></div>
+    <div class="card"><h3>Keep knowledge current</h3><p class="small muted">Re-upload <code>scenario.md</code> when the canvas changes, so Claude builds on your latest thinking.</p></div>
+    <div class="card"><h3>Spend room on variants</h3><p class="small muted">Use the extra usage to build and compare alternatives, not to rebuild a vague first attempt.</p></div>
+    <div class="card"><h3>Bigger builds, same discipline</h3><p class="small muted">Pro handles larger prototypes, but still prove one flow before adding the next. Gate to 8/10 before sending.</p></div>
+    <div class="card"><h3>Pick the model deliberately</h3><p class="small muted">The default model is fine for building. The most capable one uses your allowance faster, so save it for stubborn bugs or tricky logic.</p></div>
+    <div class="card"><h3>Mind the weekly cap</h3><p class="small muted">Spread the work across the week. A marathon evening can leave nothing for later fixes.</p></div>
+  </div>
+</div>
+</section>
+
+<section id="compose" data-level="2">
+  <div class="eyebrow">Define</div>
+  <h2>Your scenario, from scratch</h2>
+  <p class="sec-intro">Any app, feature, tool, service or situation you can imagine. There are no set options here. Work through the canvas: each part has a coaching question, examples if you're stuck, and live feedback. Fill in what you can; every part you complete is one less thing Claude has to guess.</p>
+  <p class="small muted dictate-hint" style="margin:-8px 0 16px">🎤 <span class="dh-text">Prefer to talk? Press the microphone in any field and speak. Say "new line", "comma" or "full stop" for punctuation, and press it again to stop. Your browser may send the audio to its speech service, so don't dictate personal details.</span></p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>🗣 Stuck before you start? Let Claude interview you</h3>
+      <p class="small muted" data-plan="pro">Start a new chat <em>inside your Project</em> and paste this in with your rough idea, even a vague one. Claude asks one question at a time, then writes a summary you can paste back here. Pro has room for a proper interview, so let it push you.</p><p class="small muted" data-plan="free">Copy this into a <em>new</em> chat with your rough idea, even a vague one. Claude asks one question at a time, then writes a summary you can paste back here. It uses several short messages, so keep it in its own chat.</p>
+      <div class="row" style="margin-top:8px"><button class="btn purple sm" id="copyInterview">Copy interview prompt</button><button class="btn sm" id="showInterview" aria-expanded="false">Show it</button></div>
+      <div class="tpl" id="interviewText" hidden style="margin-top:10px;background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap"></div>
+    </div>
+    <div class="card">
+      <h3>📋 Paste Claude's summary to fill the canvas</h3>
+      <p class="small muted">Paste the interview summary (or any notes with headings like <code>Users:</code> and <code>Main task:</code>). Matching parts fill in automatically; you can edit everything afterwards.</p>
+      <textarea id="pasteSummary" placeholder="Idea: …&#10;Users: …&#10;Situation: …&#10;Main task: …" style="min-height:90px;margin-top:8px"></textarea>
+      <div class="row" style="margin-top:8px"><button class="btn sm primary" id="fillFromSummary">Fill canvas</button><span class="small muted" id="fillMsg" aria-live="polite"></span></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;position:sticky;top:58px;z-index:5">
+    <div class="row between">
+      <div><strong>Canvas progress</strong> <span class="small muted" id="cvCount">0 of 12 parts</span></div>
+      <div class="row"><button class="btn sm red" id="cvClear">Clear canvas</button><button class="btn primary sm" id="toWork">Assemble prompt ↓</button></div>
+    </div>
+    <div class="meter" style="margin-top:8px"><span id="cvBar" style="background:var(--green)"></span></div>
+  </div>
+
+  <div id="canvas"></div>
+
+</section>
+
+<section id="ds">
+  <div class="eyebrow"><span data-level="1">Step 1</span><span data-level="2">Choose your design system</span></div>
+  <h2>Choose an open-source design system</h2>
+  <p class="sec-intro">A design system gives your prototype real, tested components — buttons, forms, alerts — so users react to your <em>design decisions</em>, not to wonky AI styling. Select one and it's written into your prompt automatically.</p>
+
+  <div class="current-ds" aria-live="polite">Selected: <strong id="dsCurrent">none yet</strong> <span class="muted" id="dsCurrentNote">— pick one below</span></div>
+
+  <div class="filters" role="group" aria-label="Filter design systems" id="dsFilters"></div>
+  <div class="grid g3" id="dsGrid"></div>
+
+  <div class="preview-box no-print" id="previewBox" hidden>
+    <div class="preview-head"><span id="previewLabel">Live sample</span><span>Needs internet · sample screen built with real components</span></div>
+    <iframe id="previewFrame" title="Design system sample preview" sandbox="allow-scripts"></iframe>
+  </div>
+
+</section>
+
+<section id="builder" data-level="1">
+  <div class="eyebrow">Steps 2 &amp; 3</div>
+  <h2>Prompt builder</h2>
+  <p class="sec-intro">Fill this in and you'll get a complete first prompt that asks Claude for a single HTML file with inline CSS and JavaScript, using your design system. The better your answers, the fewer messages you'll spend fixing things.</p>
+  <p class="small muted dictate-hint" style="margin:-8px 0 16px">🎤 <span class="dh-text">Prefer to talk? Press the microphone in any field and speak. Say "new line", "comma" or "full stop" for punctuation, and press it again to stop. Your browser may send the audio to its speech service, so don't dictate personal details.</span></p>
+
+  <div class="grid g2">
+    <div class="card">
+      <label class="f" for="pName">Product or service idea</label>
+      <input type="text" id="pName" placeholder="e.g. A campus app for booking quiet study rooms">
+      <label class="f" for="pUsers">Who are the users? <small>(one sentence)</small></label>
+      <input type="text" id="pUsers" placeholder="e.g. Undergraduates who need a room at short notice between lectures">
+      <label class="f" for="pTask">The main task users must be able to complete</label>
+      <textarea id="pTask" placeholder="e.g. Book a room for 4 people tomorrow afternoon and add it to your calendar"></textarea>
+      <label class="f" for="pScreens">Screens / steps in order <small>(one per line)</small></label>
+      <textarea id="pScreens" placeholder="Home with search&#10;Results list with filters&#10;Room details&#10;Confirm booking&#10;Success"></textarea>
+      <label class="f" for="pData">Example fake content <small>(optional)</small></label>
+      <input type="text" id="pData" placeholder="e.g. 8 rooms across 3 buildings, capacities 2–10, some already booked">
+      <div class="grid g2" style="gap:10px">
+        <div>
+          <label class="f" for="pDevice">Device</label>
+          <select id="pDevice">
+            <option value="mobile">Mobile (375px first)</option>
+            <option value="desktop">Desktop / laptop</option>
+            <option value="both">Both (responsive)</option>
+          </select>
+        </div>
+        <div>
+          <label class="f" for="pFidelity">Fidelity</label>
+          <select id="pFidelity">
+            <option value="mid">Mid — real components, neutral styling</option>
+            <option value="low">Low — greyscale, wireframe feel</option>
+            <option value="high">High — polished, branded colours</option>
+          </select>
+        </div>
+      </div>
+      <fieldset style="border:0;padding:0;margin:12px 0 0">
+        <legend class="f" style="margin-bottom:4px">Extras</legend>
+        <label class="check"><input type="checkbox" id="oPlan" checked> Ask Claude to confirm a plan before building <span class="muted">(saves rebuilds)</span></label>
+        <label class="check"><input type="checkbox" id="oReset" checked> Add a "Reset prototype" link to start again with a clean slate</label>
+        <label class="check"><input type="checkbox" id="oExplain" checked> Explain the result in plain English, not code</label>
+      </fieldset>
+    </div>
+    <div>
+      <div class="card" style="padding:12px 14px;margin-bottom:12px">
+        <div class="small" style="margin-bottom:6px"><strong>Not sure what to write?</strong> <span class="muted">Fill the form with an example, see the prompt it makes, then replace it with your own idea.</span></div>
+        <div class="row" role="group" aria-label="Fill with an example" id="exampleBtns">
+          <button class="btn sm" data-example="booking" aria-pressed="false">📅 Room booking app</button>
+          <button class="btn sm" data-example="plants" aria-pressed="false">🪴 Plant-care tracker</button>
+          <button class="btn sm" data-example="cafe" aria-pressed="false">📊 Café sales dashboard</button>
+        </div>
+      </div>
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <strong>Your prompt</strong>
+        <button class="btn primary sm" data-copy="#promptOut">Copy prompt</button>
+      </div>
+      <div class="prompt" id="promptOut" aria-live="polite"></div>
+      <p class="small muted" id="promptStats"></p>
+    </div>
+  </div>
+</section>
+
+<section id="library" data-level="1">
+  <div class="eyebrow">Copy &amp; adapt</div>
+  <h2>Prompt library</h2>
+  <p class="sec-intro">Follow-up prompts for after your first build. Replace the <span class="hl">[square brackets]</span>. Your selected design system is filled in automatically.</p>
+  <div class="grid g2" id="libGrid"></div>
+</section>
+
+<section id="settings" data-level="2">
+  <div class="eyebrow">Build</div>
+  <h2>Build settings</h2>
+  <p class="sec-intro">Choose the device and fidelity, then assemble your prompt from the canvas.</p>
+  <div class="card" >
+    <p class="small" style="margin:0 0 4px">Design system: <strong id="dsCurrent2">none yet</strong> <span class="muted">(chosen in the section above)</span></p>
+    <div class="grid g2" style="gap:10px">
+      <div><label class="f" for="cDevice">Device</label>
+        <select id="cDevice"><option value="mobile">Mobile first (375px)</option><option value="desktop">Desktop / laptop</option><option value="both">Both (responsive)</option><option value="kiosk">Touchscreen kiosk</option><option value="tablet">Tablet</option></select></div>
+      <div><label class="f" for="cFid">Fidelity</label>
+        <select id="cFid"><option value="mid">Mid: real components, neutral look</option><option value="low">Low: greyscale wireframe feel</option><option value="high">High: polished and branded</option></select></div>
+    </div>
+    <label class="check" style="margin-top:12px"><input type="checkbox" id="cSwitch" checked> Add a hidden state switcher (Shift+S) so you can preview each state</label>
+    <label class="check"><input type="checkbox" id="cAsk" checked> Ask Claude to question me and plan before building <span class="muted">(recommended)</span></label>
+    <div class="row" style="margin-top:12px"><button class="btn primary" id="toWork2">Assemble prompt into workspace ↓</button></div>
+  </div>
+
+</section>
+
+<section id="project" data-level="2" data-plan="pro">
+  <div class="eyebrow">Pro · Project kit</div>
+  <h2>Set up your Level 2 Project</h2>
+  <p class="sec-intro">On Pro, keep each prototype in its own <strong>Project</strong>. The instructions below hold the studio's rules, and your canvas becomes a knowledge file. Every chat in the Project, whether interview, build, variants or fixes, then starts already briefed, so your prompts stay short.</p>
+  <div class="grid g2">
+    <div class="card">
+      <div class="row between" style="margin-bottom:8px"><h3 style="margin:0">1 · Project instructions</h3><button class="btn primary sm" data-copyproj="1">Copy</button></div>
+      <p class="small muted" style="margin:0 0 8px">Paste into your Project's instructions. It updates as you change the canvas and design system.</p>
+      <div class="tpl" id="projInstr2" style="background:var(--code-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;max-height:360px;overflow:auto"></div>
+    </div>
+    <div class="card">
+      <h3>2 · Knowledge files</h3>
+      <p class="small muted">Upload these to the Project's knowledge, and re-upload whenever they change.</p>
+      <div class="row" style="margin:10px 0"><button class="btn purple" id="dlScenario">⤓ scenario.md (from your canvas)</button></div>
+      <h3 style="margin-top:16px">3 · One chat per job</h3>
+      <ol class="small" style="padding-left:20px;margin:6px 0">
+        <li><strong>Interview:</strong> sharpen the scenario, then update the canvas.</li>
+        <li><strong>Build v1:</strong> paste your assembled prompt.</li>
+        <li><strong>Variants:</strong> use the "Three variants" pattern on your riskiest screen.</li>
+        <li><strong>Fixes:</strong> attach the latest HTML and describe one change at a time.</li>
+      </ol>
+      <p class="small muted">Shorter, focused chats are faster and more accurate than one long one, and they use less of your allowance per message.</p>
+    </div>
+  </div>
+</section>
+
+<section id="work" data-level="2">
+  <div class="eyebrow">Craft</div>
+  <h2>Workspace and quality gate</h2>
+  <p class="sec-intro">This is your prompt; edit anything. Assemble it from your canvas, or write it entirely yourself. The gate checks for the ingredients that save you messages later. It never blocks you: a 6/10 prompt for a quick experiment is fine if you know what you left out.</p>
+  <div class="split">
+    <div class="card">
+      <div class="row between" style="margin-bottom:8px">
+        <label for="workspace" style="font-weight:600">Your prompt</label>
+        <span class="small muted" id="wc">0 words</span>
+      </div>
+      <textarea id="workspace" placeholder="Write any prompt here (an app, a single feature, a tricky scenario, a weird idea), or assemble one from your canvas…"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn primary" id="copyWork">Copy prompt</button>
+        <button class="btn sm red" id="clearWork">Clear</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Quality gate</h3>
+      <div class="score"><span class="score-num" id="scoreNum">0/10</span><div class="meter"><span id="scoreBar"></span></div></div>
+      <p class="small muted" id="scoreMsg" style="margin:6px 0 0"></p>
+      <ul class="gate" id="gate"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="patterns" data-level="2">
+  <div class="eyebrow">Craft</div>
+  <h2>Prompt patterns</h2>
+  <p class="sec-intro">Reusable shapes for prompts, not fixed text. Insert one into your workspace and replace the <span class="hl">[square brackets]</span>. The illustrated guide shows each one as a diagram.</p>
+  <div class="grid g2" id="patGrid"></div>
+</section>
+
+<section id="fake" data-level="2">
+  <div class="eyebrow">Scope</div>
+  <h2>Fake it honestly</h2>
+  <p class="sec-intro">A single HTML file can't do everything a real app does. It doesn't need to; it only needs to feel real enough for the main task. Here's how to simulate the hard parts, and what to tell Claude.</p>
+  <div class="card table-scroll" style="padding:8px">
+    <table class="t">
+      <thead><tr><th>Real thing</th><th>How to fake it</th><th>Say to Claude</th></tr></thead>
+      <tbody id="fakeBody"></tbody>
+    </table>
+  </div>
+  <div class="callout warn"><p><strong>Ethics line:</strong> a prototype must never collect real passwords, card numbers or personal data, even by accident. Label fake payment and login screens as "Prototype — don't enter real details".</p></div>
+</section>
+
+<section id="help">
+  <div class="eyebrow">When it goes wrong</div>
+  <h2>Troubleshooting</h2>
+  <div class="grid g2">
+    <div class="card">
+      <h3>The preview looks plain or unstyled</h3>
+      <p class="small muted">Claude's preview can block some external files. Download the HTML and open it in Chrome or Edge — if it looks right there, the prototype is fine. Or ask Claude: <em>"Load the design system from cdnjs.cloudflare.com if it's available there."</em></p>
+    </div>
+    <div class="card">
+      <h3>Claude rebuilt everything when I asked for one change</h3>
+      <p class="small muted">Say what must <em>not</em> change: <em>"Change only the button text on the Confirm screen. Keep everything else exactly as it is."</em> If it still drifts, go back to your last downloaded version.</p>
+    </div>
+    <div class="card">
+      <h3>A button does nothing</h3>
+      <p class="small muted">Describe the symptom, not the fix: what you clicked, what you expected, what happened. Then ask Claude to fix only that.</p>
+    </div>
+    <div class="card">
+      <h3>I've hit my usage limit</h3>
+      <p class="small muted" data-plan="free">Download what you have, click through it, and plan your next 2–3 prompts. When your allowance refills, start a fresh chat with the latest HTML attached and a short summary, so you don't resend the whole history.</p><p class="small muted" data-plan="pro">Pro has a 5-hour session limit and a weekly cap. Download what you have and click through it. Next time, start a fresh chat in your Project and attach the latest HTML, rather than continuing a long chat.</p>
+    </div>
+    <div class="card">
+      <h3>The response stopped half-way</h3>
+      <p class="small muted">Reply <em>"Continue from exactly where you stopped."</em> For big prototypes, ask for fewer screens and build one flow at a time.</p>
+    </div>
+    <div class="card">
+      <h3>It doesn't look like the design system</h3>
+      <p class="small muted">Ask Claude to replace any custom-styled parts with the design system's own components, then compare against the system's component pages. You're the quality check.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>VibeProto · Prompt Studio · Levels 1 and 2 · Free and Pro editions · Single HTML file · Design systems are their owners' work under their own open-source licences · Check your module's AI-use policy</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+'use strict';
+const K='vpstudio.view';let V={};
+try{V=JSON.parse(localStorage.getItem(K))||{}}catch(e){}
+V=Object.assign({level:'1',plan:'free',theme:null},V);
+const __q=new URLSearchParams(location.search);if(/^[12]$/.test(__q.get('level')||''))V.level=__q.get('level');if(/^(free|pro)$/.test(__q.get('plan')||''))V.plan=__q.get('plan');
+function save(){try{localStorage.setItem(K,JSON.stringify(V))}catch(e){}}
+const B=document.body,R=document.documentElement;
+function apply(){
+  B.dataset.level=V.level;B.dataset.plan=V.plan;
+  if(V.theme)R.setAttribute('data-theme',V.theme);else R.removeAttribute('data-theme');
+  document.querySelectorAll('[data-setlevel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.setlevel===V.level));
+  document.querySelectorAll('[data-setplan]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.setplan===V.plan));
+  document.querySelectorAll('.ed-label').forEach(e=>e.textContent=`Level ${V.level} · ${V.plan==='pro'?'Claude Pro':'Free plan'} edition`);
+}
+document.querySelectorAll('[data-setlevel]').forEach(b=>b.addEventListener('click',()=>{V.level=b.dataset.setlevel;save();apply();window.scrollTo({top:0})}));
+document.querySelectorAll('[data-setplan]').forEach(b=>b.addEventListener('click',()=>{V.plan=b.dataset.setplan;save();apply();document.dispatchEvent(new CustomEvent('vp:plan'))}));
+document.getElementById('themeBtn').addEventListener('click',()=>{const cur=V.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');V.theme=cur==='dark'?'light':'dark';save();apply()});
+
+document.getElementById('toAudio').addEventListener('click',e=>{e.currentTarget.href='vibe-coding-audio-guide.html?level='+document.body.dataset.level+'&plan='+document.body.dataset.plan});
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  if(!confirm('Reset the studio?\n\nThis clears everything you\'ve entered at both levels: the prompt builder, your design system choice, the scenario canvas, the workspace and checklists. Your level, plan and theme stay as they are.\n\nDownload or copy anything you want to keep first.'))return;
+  try{localStorage.removeItem('vpstudio.l1');localStorage.removeItem('vpstudio.l2')}catch(e){}
+  window.scrollTo({top:0});location.reload();
+});
+apply();
+})();
+</script>
+<script>
+(function(){
+'use strict';
+
+/* ---------- Storage helpers (safe if storage is blocked) ---------- */
+const KEY='vpstudio.l1';
+const isPro=()=>document.body.dataset.plan==='pro';
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+const state=Object.assign({ds:null,done:{},setup:{},log:[],theme:null,form:{}},load());
+
+const $=s=>document.querySelector(s);
+const $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1600)}
+function copyText(text){
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>toast('Copied'),()=>fallback())}else fallback();
+  function fallback(){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copied')}catch(e){toast('Select and copy manually')}ta.remove()}
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-copy]');if(!b)return;
+  const src=b.getAttribute('data-copy');let text;
+  if(src.startsWith('#')){const el=$(src);const clone=el.cloneNode(true);clone.querySelectorAll('button').forEach(x=>x.remove());text=clone.textContent.trim()}
+  else text=b.dataset.text;
+  copyText(text);
+});
+
+/* ---------- Design systems ---------- */
+const DS=[
+ {id:'pico',name:'Pico CSS',org:'Open source',tags:['quick'],licence:'MIT',
+  good:'Fastest start. Plain HTML looks good with almost no classes, so Claude rarely gets it wrong.',
+  watch:'Few complex components (no data tables, steppers). Looks generic.',
+  best:'First prototypes, simple forms, content pages.',
+  docs:'https://picocss.com',
+  prompt:'Pico CSS v2, loaded from its official CDN. Rely on its classless semantic styling (main.container, article, nav, form elements) and only add Pico classes where needed.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">',
+  body:'<main class="container" style="padding-top:16px"><h2>Book a study room</h2><label>Your name<input placeholder="e.g. Sam Patel"></label><label>Date<input type="date"></label><button>Find rooms</button><article>Room 3B is free 2–4pm today.</article></main>'},
+ {id:'bootstrap',name:'Bootstrap 5',org:'Open source',tags:['components','quick'],licence:'MIT',
+  good:'Huge component set and the system Claude knows best. Easy responsive layouts.',
+  watch:'Instantly recognisable "Bootstrap look" unless you change colours.',
+  best:'Dashboards, multi-screen apps, anything needing modals, tabs or cards.',
+  docs:'https://getbootstrap.com',
+  prompt:'Bootstrap 5.3, loaded from its official CDN (CSS and the bundle JS for interactive components). Use Bootstrap components and utility classes rather than custom CSS.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">',
+  body:'<div class="container py-3"><h2 class="h4">Book a study room</h2><div class="mb-3"><label class="form-label" for="n">Your name</label><input class="form-control" id="n" placeholder="e.g. Sam Patel"></div><div class="mb-3"><label class="form-label" for="d">Date</label><input class="form-control" type="date" id="d"></div><button class="btn btn-primary">Find rooms</button><div class="alert alert-info mt-3">Room 3B is free 2–4pm today.</div></div>'},
+ {id:'govuk',name:'GOV.UK Design System',org:'UK Government Digital Service',tags:['public','a11y'],licence:'MIT (code)',
+  good:'Accessibility gold standard, with research-backed guidance on when to use each pattern. Superb for forms and step-by-step services.',
+  watch:'The GOV.UK crown, logo and GDS Transport font are only for government services — ask Claude not to use them.',
+  best:'Form-heavy services, "one thing per page" journeys, accessibility-focused projects.',
+  docs:'https://design-system.service.gov.uk',
+  prompt:'GOV.UK Frontend v5, loaded from a public CDN (CSS only is fine). Follow GOV.UK patterns such as "one thing per page", the error summary and the check-answers page. Do NOT use the crown logo, the GOV.UK name or the GDS Transport font — use a generic header and a system font, because this is not a government service.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/govuk-frontend@5.7.1/dist/govuk/govuk-frontend.min.css"><style>body{font-family:Arial,sans-serif}.govuk-body,.govuk-heading-l,.govuk-label,.govuk-button,.govuk-inset-text,.govuk-input{font-family:Arial,sans-serif}</style>',
+  body:'<div class="govuk-width-container" style="padding-top:15px"><h1 class="govuk-heading-l">Book a study room</h1><div class="govuk-form-group"><label class="govuk-label" for="n">Your name</label><input class="govuk-input" id="n"></div><button class="govuk-button">Continue</button><div class="govuk-inset-text">Room 3B is free 2–4pm today.</div></div>'},
+ {id:'nhs',name:'NHS.UK Design System',org:'NHS England',tags:['public','a11y'],licence:'MIT (code)',
+  good:'Clear, calm patterns tested with a very wide range of users, including people with low digital skills.',
+  watch:'The NHS logo, name and Frutiger font are restricted — ask for a generic header and Arial.',
+  best:'Health, wellbeing and care journeys; audiences with varied confidence.',
+  docs:'https://service-manual.nhs.uk/design-system',
+  prompt:'the NHS.UK frontend library (nhsuk-frontend v9 CSS from jsDelivr). Follow NHS.UK patterns and content style (plain English, short sentences). Do NOT use the NHS logo, name or Frutiger font — use a generic service name and Arial, because this is a student prototype.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nhsuk-frontend@9.6.4/dist/nhsuk.min.css"><style>body,.nhsuk-heading-l,.nhsuk-label,.nhsuk-input,.nhsuk-button,.nhsuk-inset-text{font-family:Arial,sans-serif}</style>',
+  body:'<div class="nhsuk-width-container" style="padding-top:16px"><h1 class="nhsuk-heading-l">Book a study room</h1><div class="nhsuk-form-group"><label class="nhsuk-label" for="n">Your name</label><input class="nhsuk-input" id="n" type="text"></div><button class="nhsuk-button" type="button">Continue</button><div class="nhsuk-inset-text"><p>Room 3B is free 2–4pm today.</p></div></div>'},
+ {id:'uswds',name:'U.S. Web Design System',org:'US General Services Administration',tags:['public','a11y','components'],licence:'Public domain (CC0)',
+  good:'Accessible, well-documented components and templates, free of branding restrictions.',
+  watch:'US-flavoured content and conventions (dates, addresses) — tell Claude to use UK formats.',
+  best:'Information-rich services, forms, step indicators, accessible tables.',
+  docs:'https://designsystem.digital.gov',
+  prompt:'the U.S. Web Design System (USWDS) v3, loaded from a public CDN. Use usa- component classes. Use UK date, address and spelling conventions.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@uswds/uswds@3.8.1/dist/css/uswds.min.css">',
+  body:'<div class="grid-container padding-y-2"><h1 class="font-heading-lg margin-top-0">Book a study room</h1><label class="usa-label" for="n">Your name</label><input class="usa-input" id="n"><button class="usa-button margin-top-2">Find rooms</button><div class="usa-alert usa-alert--info usa-alert--slim margin-top-2"><div class="usa-alert__body"><p class="usa-alert__text">Room 3B is free 2–4pm today.</p></div></div></div>'},
+ {id:'bulma',name:'Bulma',org:'Open source',tags:['quick'],licence:'MIT',
+  good:'CSS only (no JavaScript to break) with readable class names like "button is-primary".',
+  watch:'Interactive bits (menus, modals) need extra JavaScript Claude writes itself.',
+  best:'Clean marketing pages, simple apps, card layouts.',
+  docs:'https://bulma.io',
+  prompt:'Bulma v1, loaded from its official CDN. Use Bulma classes for layout and components; write small vanilla JavaScript only where interaction is needed.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">',
+  body:'<section class="section" style="padding:1.5rem"><h1 class="title is-4">Book a study room</h1><div class="field"><label class="label" for="n">Your name</label><div class="control"><input class="input" id="n" placeholder="e.g. Sam Patel"></div></div><button class="button is-primary">Find rooms</button><div class="notification is-info is-light mt-4">Room 3B is free 2–4pm today.</div></section>'},
+ {id:'shoelace',name:'Shoelace',org:'Open source (now continued as Web Awesome)',tags:['webcomp','components'],licence:'MIT',
+  good:'Polished, themeable web components (<sl-button>, <sl-dialog>) that work in plain HTML.',
+  watch:'Needs JavaScript from a CDN, so check it loads when you download the file.',
+  best:'Modern-looking app UIs with dialogs, drawers, tabs and ratings.',
+  docs:'https://shoelace.style',
+  prompt:'Shoelace 2 web components, loaded from its official CDN (light theme stylesheet plus the autoloader script). Use sl- components for interactive elements.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/themes/light.css"><script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.0/cdn/shoelace-autoloader.js"><\/script><style>body{font-family:var(--sl-font-sans);padding:16px;margin:0}sl-input,sl-alert{margin:12px 0;display:block}</style>',
+  body:'<h2 style="margin:0 0 8px">Book a study room</h2><sl-input label="Your name" placeholder="e.g. Sam Patel"></sl-input><sl-input type="date" label="Date"></sl-input><sl-button variant="primary">Find rooms</sl-button><sl-alert variant="primary" open>Room 3B is free 2–4pm today.</sl-alert>'},
+ {id:'carbon',name:'IBM Carbon',org:'IBM',tags:['components','webcomp'],licence:'Apache-2.0',
+  good:'Serious, data-dense enterprise patterns with strong accessibility documentation.',
+  watch:'Heavier and more complex — expect more fix-up prompts.',
+  best:'Dashboards, admin tools, data tables, B2B products.',
+  docs:'https://carbondesignsystem.com',
+  prompt:'IBM Carbon, loaded from a public CDN (the carbon-components CSS from jsDelivr is simplest). Use Carbon components for forms, buttons, tables and notifications.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/carbon-components@10.59.2/css/carbon-components.min.css"><style>body{font-family:"IBM Plex Sans",Arial,sans-serif;padding:16px;margin:0}h2{font-weight:400;margin:0 0 16px}.bx--form-item{margin-bottom:16px}.bx--inline-notification{margin-top:16px;max-width:none}</style>',
+  body:'<h2>Book a study room</h2><div class="bx--form-item"><label class="bx--label" for="n">Your name</label><input class="bx--text-input" id="n" type="text" placeholder="e.g. Sam Patel"></div><button class="bx--btn bx--btn--primary" type="button">Find rooms</button><div class="bx--inline-notification bx--inline-notification--info bx--inline-notification--low-contrast" role="status"><div class="bx--inline-notification__details"><div class="bx--inline-notification__text-wrapper"><p class="bx--inline-notification__subtitle">Room 3B is free 2–4pm today.</p></div></div></div>'},
+ {id:'material',name:'Material Web',org:'Google',tags:['webcomp'],licence:'Apache-2.0',
+  good:'Familiar Android-style look; users recognise its patterns.',
+  watch:'The library is in maintenance mode — fine for prototypes, less so for real products.',
+  best:'Mobile-app-style prototypes.',
+  docs:'https://material-web.dev',
+  prompt:'Google Material Web components (Material 3), loaded as a module from jsDelivr (@material/web/all.js with +esm). Use md- components for buttons, text fields and lists.',
+  head:'<script type="module">import "https://cdn.jsdelivr.net/npm/@material/web@2.2.0/all.js/+esm";<\/script><style>body{font-family:Roboto,system-ui,sans-serif;padding:16px;margin:0}h2{font-weight:400;margin:0 0 12px}md-outlined-text-field{display:block;width:100%;margin:0 0 12px}md-list{margin-top:12px;border:1px solid #cac4d0;border-radius:12px}</style>',
+  body:'<h2>Book a study room</h2><md-outlined-text-field label="Your name"></md-outlined-text-field><md-outlined-text-field label="Date" type="date"></md-outlined-text-field><md-filled-button>Find rooms</md-filled-button><md-list><md-list-item><div slot="headline">Room 3B</div><div slot="supporting-text">Free 2–4pm today</div></md-list-item></md-list>'},
+ {id:'tailwind',name:'Tailwind CSS',org:'Tailwind Labs (open source)',tags:['quick'],licence:'MIT',
+  good:'Very flexible utility classes. Claude knows it well, and results look modern.',
+  watch:'A styling toolkit rather than a full design system: ask for one accent colour and consistent spacing, or screens can drift apart.',
+  best:'Custom-looking apps, landing pages and dashboards.',
+  docs:'https://tailwindcss.com',
+  prompt:'Tailwind CSS via its Play CDN script (cdn.tailwindcss.com), using utility classes with one accent colour and consistent spacing throughout.',
+  head:'<script src="https://cdn.tailwindcss.com/3.4.16"><\/script>',
+  body:'<div class="p-4 font-sans text-slate-800"><h2 class="text-2xl font-semibold mb-4">Book a study room</h2><label class="block text-sm font-medium mb-1" for="n">Your name</label><input id="n" class="w-full border border-slate-300 rounded-lg px-3 py-2 mb-4" placeholder="e.g. Sam Patel"><button class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg px-4 py-2">Find rooms</button><div class="mt-4 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-900 px-4 py-3">Room 3B is free 2–4pm today.</div></div>'},
+ {id:'plain',name:'No design system (plain HTML)',org:'Claude styles it',tags:[],licence:'No licence needed',
+  good:'No external files at all, so it always loads, even offline or when CDNs are blocked.',
+  watch:'Claude invents the styling, so expect more inconsistency and more fix-up prompts.',
+  best:'Quick sketches, or when other design systems won’t load.',
+  docs:'',
+  prompt:'no design system: plain, clean HTML and CSS with one accent colour and a simple, consistent visual style.',
+  head:'<style>body{font-family:system-ui,sans-serif;color:#1f2328;padding:16px;margin:0}h2{margin:0 0 14px}label{display:block;font-weight:600;margin-bottom:4px}input{width:100%;box-sizing:border-box;padding:9px;border:1px solid #8c959f;border-radius:6px;margin-bottom:14px;font:inherit}button{background:#0969da;color:#fff;border:0;border-radius:6px;padding:9px 16px;font:inherit;font-weight:600}.note{margin-top:14px;padding:10px 12px;background:#ddf4ff;border-left:4px solid #0969da;border-radius:4px}</style>',
+  body:'<h2>Book a study room</h2><label for="n">Your name</label><input id="n" placeholder="e.g. Sam Patel"><button>Find rooms</button><div class="note">Room 3B is free 2–4pm today.</div>'}
+];
+window.VP_DS=()=>DS.find(x=>x.id===state.ds)||null;
+const FILTERS=[['all','All'],['quick','Quickest start'],['public','Public sector'],['a11y','Accessibility-led'],['components','Rich components'],['webcomp','Web components']];
+let curFilter='all';
+
+function renderFilters(){
+  $('#dsFilters').innerHTML=FILTERS.map(([id,l])=>`<button class="btn sm" data-filter="${id}" aria-pressed="${id===curFilter}">${l}</button>`).join('');
+}
+function renderDS(){
+  const list=DS.filter(d=>curFilter==='all'||d.tags.includes(curFilter));
+  $('#dsGrid').innerHTML=list.map(d=>{
+    const sel=state.ds===d.id;
+    return `<article class="card ds-card${sel?' selected':''}" data-id="${d.id}">
+      <h3>${esc(d.name)} ${sel?'<span class="pill blue">Selected</span>':''}</h3>
+      <div class="tags"><span class="pill">${esc(d.licence)}</span><span class="pill">${esc(d.org)}</span></div>
+      <dl><dt>Good for</dt><dd>${esc(d.good)}</dd><dt>Watch out</dt><dd>${esc(d.watch)}</dd><dt>Best for</dt><dd>${esc(d.best)}</dd></dl>
+      <div class="row">
+        <button class="btn ${sel?'':'primary'} sm" data-select="${d.id}" aria-pressed="${sel}">${sel?'✓ Selected':'Select'}</button>
+        ${d.head?`<button class="btn sm" data-preview="${d.id}">Preview</button>`:''}
+        ${d.docs?`<a class="btn sm" href="${d.docs}" target="_blank" rel="noopener">Docs ↗</a>`:''}
+      </div></article>`;
+  }).join('');
+}
+function showPreview(id){
+  const d=DS.find(x=>x.id===id);if(!d||!d.head)return;
+  $('#previewBox').hidden=false;
+  $('#previewLabel').textContent='Live sample — '+d.name;
+  $('#previewFrame').srcdoc='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'+d.head+'</head><body>'+d.body+'</body></html>';
+  $('#previewBox').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function updateDSLabels(){
+  const d=DS.find(x=>x.id===state.ds);
+  $('#dsCurrent').textContent=d?d.name:'none yet';
+  $('#dsCurrentNote').textContent=d?'— used in the prompt builder and library':'— pick one below';
+}
+$('#dsFilters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;curFilter=b.dataset.filter;renderFilters();renderDS()});
+$('#dsGrid').addEventListener('click',e=>{
+  const s=e.target.closest('[data-select]');
+  if(s){state.ds=s.dataset.select;save();document.dispatchEvent(new CustomEvent('vp:ds'));renderDS();updateDSLabels();buildPrompt();renderLib();toast(DS.find(x=>x.id===state.ds).name+' selected');const d=DS.find(x=>x.id===state.ds);if(d.head)showPreview(d.id);return}
+  const p=e.target.closest('[data-preview]');if(p)showPreview(p.dataset.preview);
+});
+
+/* ---------- Prompt builder ---------- */
+const FIELDS=['pName','pUsers','pTask','pScreens','pData','pDevice','pFidelity','oPlan','oReset','oExplain'];
+FIELDS.forEach(id=>{
+  const el=$('#'+id);const v=state.form[id];
+  if(v!==undefined){if(el.type==='checkbox')el.checked=v;else el.value=v}
+  el.addEventListener('input',()=>{state.form[id]=el.type==='checkbox'?el.checked:el.value;save();buildPrompt()});
+});
+function val(id,ph){const v=$('#'+id).value.trim();return v||ph}
+function buildPrompt(){
+  const d=DS.find(x=>x.id===state.ds);
+  const dsLine=d?d.prompt:'[choose a design system above]';
+  const screens=val('pScreens','[list your screens]').split('\n').map(s=>s.trim()).filter(Boolean).map((s,i)=>`  ${i+1}. ${s}`).join('\n');
+  const device={mobile:'Design mobile-first for a 375px-wide phone screen; it should still work on a laptop.',desktop:'Design for a laptop screen (around 1280px wide); it should not break on a phone.',both:'Make it fully responsive so it works equally well on a 375px phone and a 1280px laptop.'}[$('#pDevice').value];
+  const fid={low:'Low fidelity: greyscale only, simple placeholder boxes instead of images, so people focus on the flow rather than looks.',mid:'Mid fidelity: use the design system\u2019s default look with neutral colours and realistic text; use simple coloured boxes instead of photos.',high:'High fidelity: polished and branded, with a consistent accent colour and realistic content; still no real photos (use coloured boxes or simple SVG icons).'}[$('#pFidelity').value];
+  const extras=[];
+  if($('#oReset').checked)extras.push('- Add a small "Reset prototype" link in the footer that returns to the first screen and clears any entered data, so I can start again cleanly.');
+  const data=$('#pData').value.trim();
+  let p=`I'm a UX student who doesn't write code. Please build a clickable prototype.
+
+FORMAT
+- One single, self-contained HTML file with all CSS and JavaScript inline in <style> and <script> tags.
+- The only external files allowed are the design system's official CDN files.
+- No server, database, login or real APIs. Fake any saving or searching with JavaScript and in-memory data.
+- Show it to me as an artifact so I can preview it.${isPro()?'\n- Follow the Project instructions as well; if anything here conflicts, this message wins.':''}
+
+DESIGN SYSTEM
+- Use ${dsLine}
+- Use the design system's own components and patterns. Only write custom CSS for small layout adjustments.
+
+THE PROTOTYPE
+- Product: ${val('pName','[your product idea]')}
+- Users: ${val('pUsers','[who the users are]')}
+- Main task users must be able to complete: ${val('pTask','[the main task]')}
+- Screens, in order:
+${screens}
+- Content: realistic fake content in UK English${data?' — '+data:''}. No lorem ipsum and no real people's data.
+
+REQUIREMENTS
+- Everything needed to complete the main task must work, including going back and correcting mistakes.
+- Anything outside the task should show a short message: "This part isn't in the prototype yet."
+- Accessibility: semantic HTML, a label on every input, visible keyboard focus, sensible heading order, colour contrast that meets WCAG 2.2 AA, and helpful error messages.
+- ${device}
+- ${fid}
+${extras.length?extras.join('\n')+'\n':''}- Add comments in the code marking where each screen starts, so I can describe the structure in my report.`;
+  if($('#oPlan').checked)p+=`
+
+BEFORE YOU BUILD
+List the screens and the main components you'll use from the design system in no more than 8 bullet points, then wait for me to reply "go". Don't write any code until I do.`;
+  if($('#oExplain').checked)p+=`
+
+AFTER YOU BUILD
+In 3–5 plain-English sentences (no code), tell me how to walk through the main task and anything you had to assume.`;
+  $('#promptOut').textContent=p;
+  const pi=$('#projInstr1');if(pi)pi.textContent=projText1(dsLine);
+  const words=p.split(/\s+/).length;
+  $('#promptStats').textContent=`${words} words · ${d?'Design system: '+d.name:'⚠ No design system selected yet'}`;
+}
+const EXAMPLES={
+ booking:{label:'Room booking app',f:{pName:'A campus app for booking quiet study rooms',pUsers:'Undergraduates who need a room at short notice between lectures',pTask:'Find a room for 4 people tomorrow between 2pm and 4pm, book it, and check the booking appears in "My bookings".',pScreens:'Home with a quick search (date, time, group size)\nResults list with filters for building and facilities\nRoom details with photo placeholder and facilities\nConfirm booking\nSuccess screen with booking reference\nMy bookings',pData:'10 rooms across 3 buildings, capacities 2–10, some already booked tomorrow afternoon',pDevice:'mobile',pFidelity:'mid'}},
+ plants:{label:'Plant-care tracker',f:{pName:'A tracker that helps flatmates share the care of their houseplants',pUsers:'Students sharing a house who keep forgetting whose turn it is to water the plants',pTask:'See which plants need watering today, mark the fern as watered, and check that it moves to "Done today".',pScreens:'Today: plants that need water now\nPlant details with a care tip and watering history\nMark as watered (choose who did it)\nAll plants list\nAdd a new plant',pData:'6 plants (fern, cactus, snake plant, pothos, basil, peace lily) with different watering schedules, shared by 4 flatmates',pDevice:'mobile',pFidelity:'low'}},
+ cafe:{label:'Café sales dashboard',f:{pName:'A dashboard that shows a small café owner how the day is going at a glance',pUsers:'An independent café owner who checks the numbers on a laptop between serving customers',pTask:'Find out which item sold best yesterday, then see which items are running low on stock.',pScreens:'Overview: today’s sales, number of orders and the busiest hour\nSales by item, sortable, with a simple bar chart\nItem details with the last 7 days\nStock levels with low-stock warnings',pData:'20 menu items (coffees, teas, cakes, sandwiches) with 7 days of realistic sales and stock figures in pounds',pDevice:'desktop',pFidelity:'high'}}
+};
+$('#exampleBtns').addEventListener('click',e=>{
+  const b=e.target.closest('[data-example]');if(!b)return;
+  const ex=EXAMPLES[b.dataset.example];
+  Object.entries(ex.f).forEach(([k,v])=>{$('#'+k).value=v;state.form[k]=v});
+  $$('#exampleBtns [data-example]').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  save();buildPrompt();toast('Example filled: '+ex.label);
+});
+
+
+/* setup checklist */
+$$('[data-setup]').forEach(c=>{c.checked=!!state.setup[c.dataset.setup];c.addEventListener('change',()=>{state.setup[c.dataset.setup]=c.checked;save()})});
+
+function projText1(dsLine){return `This Project is a UX student's prototype. The student does not write code.
+
+Always:
+- Produce one self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are the design system's official CDN files.
+- Use ${dsLine}
+- Use realistic fake content in UK English. No lorem ipsum and no real people's data.
+- Keep everything needed for the main task working. Anything else shows "This part isn't in the prototype yet."
+- Meet WCAG 2.2 AA: a label on every input, visible keyboard focus, sensible headings, good contrast and clear error messages.
+- When I ask for a change, change only that and keep everything else exactly the same.
+- Show the result as an artifact, and explain changes in plain English, not code.
+
+Context:
+- Product: ${val('pName','[your product idea]')}
+- Users: ${val('pUsers','[who the users are]')}
+- Main task: ${val('pTask','[the main task]')}`}
+
+/* ---------- Prompt library ---------- */
+const LIB=[
+ {t:'Change one thing',use:'Small edits without side effects',p:'Change only this: [describe the change, e.g. make the "Book" button say "Reserve this room"]. Keep everything else exactly as it is, including layout, content and behaviour.'},
+ {t:'It\u2019s broken',use:'Something doesn\u2019t work',p:'When I [what you did, e.g. click "Confirm" on the booking screen], I expected [what should happen], but instead [what actually happens]. Find the cause and fix only that. Tell me in one sentence what was wrong.'},
+ {t:'Stay on-system',use:'Parts don\u2019t match the design system',p:'Some parts of the prototype don\u2019t look like {DS}. Replace any custom-styled buttons, inputs, alerts, cards and navigation with the official {DS} components, and remove custom CSS that duplicates them.'},
+ {t:'Accessibility pass',use:'Before you share',p:'Review the prototype against WCAG 2.2 AA: labels, keyboard access and focus order, colour contrast, heading structure, alt text, and error messages. List the issues in a short table (issue, where, fix), then fix them all in one update.'},
+ {t:'Realistic errors',use:'Forms',p:'Add realistic validation to [the form] using {DS} error patterns: empty required fields, an invalid email, and [another case]. Show an error summary at the top and an inline message next to each field. Only show errors after the user submits.'},
+ {t:'Final check',use:'Before you share',p:'Do a final check of this prototype: replace any placeholder text with realistic content, make sure every step of this task works — [paste task] — and that "Back" never loses entered data. Anything outside the task should say "This part isn\u2019t in the prototype yet."'},
+ {t:'Explain it to me',use:'Describing your prototype',p:'Without showing any code, explain in plain English how this prototype is organised: the screens, how users move between them, and which {DS} components each screen uses. Keep it under 150 words.'},
+ {t:'Handover to a new chat',plan:'free',use:'Long chat or usage limit',p:'Write a handover brief I can paste into a new chat to keep working on this prototype. Include the purpose, users, main task, design system ({DS}), the screens, decisions we\u2019ve made, and changes still to do. Keep it under 200 words. Don\u2019t include code — I\u2019ll attach the HTML file.'},
+ {t:'Update the Project',plan:'pro',use:'Before starting a new chat',p:'List the design decisions we\u2019ve made in this chat as short bullet points I can add to the Project instructions, so new chats in this Project start with them. Include anything about {DS} components we agreed to use or avoid. Under 120 words, no code.'}
+];
+function renderLib(){
+  const d=DS.find(x=>x.id===state.ds);const name=d?d.name:'[your design system]';
+  $('#libGrid').innerHTML=LIB.filter(l=>!l.plan||l.plan===(isPro()?'pro':'free')).map((l,i)=>{
+    const text=l.p.replace(/\{DS\}/g,name);
+    const html=esc(text).replace(/\[([^\]]+)\]/g,'<span class="hl">[$1]</span>');
+    return `<div class="card lib-card"><div class="row" style="justify-content:space-between;margin-bottom:8px"><h3 style="margin:0">${esc(l.t)}</h3><span class="pill">${esc(l.use)}</span></div>
+      <div class="copy-wrap"><div class="prompt" id="lib${i}">${html}</div><button class="btn sm" data-copy="#lib${i}">Copy</button></div></div>`;
+  }).join('');
+}
+
+
+document.addEventListener('vp:plan',()=>{buildPrompt();renderLib()});
+
+/* ---------- Init ---------- */
+renderFilters();renderDS();updateDSLabels();buildPrompt();renderLib();
+})();
+</script>
+<script>
+(function(){
+'use strict';
+const KEY='vpstudio.l2';
+const isPro=()=>document.body.dataset.plan==='pro';
+function dsObj(){return window.VP_DS?window.VP_DS():null}
+function dsLine(){const d=dsObj();return d?d.prompt:'[choose a design system in the Design systems section]'}
+function dsName(){const d=dsObj();return d?d.name:'Not chosen yet'}
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return {}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const S=Object.assign({app:null,feat:[],func:[],st:[],f:{},work:'',done:{},journal:[],theme:null,lock:{},scn:null},load());
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),1600)}
+function copyText(text){
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');toast('Copied')}catch(e){toast('Select and copy manually')}ta.remove()};
+  if(navigator.clipboard&&window.isSecureContext)navigator.clipboard.writeText(text).then(()=>toast('Copied'),fb);else fb();
+}
+function download(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+/* theme */
+
+/* ---------- CANVAS FIELDS ---------- */
+const lines=v=>v.split('\n').map(s=>s.replace(/^\s*(?:[-*•]|\d+[.)])\s*/,'').trim()).filter(Boolean);
+const words=v=>v.trim()?v.trim().split(/\s+/).length:0;
+const GROUPS=[
+ {h:'A · The idea and the people',ids:['idea','users','situation','problem']},
+ {h:'B · The task',ids:['task','success','screens']},
+ {h:'C · How it behaves',ids:['features','states','constraints','fake','out']}
+];
+const F={
+ idea:{l:'Your idea in one sentence',q:'What are you making, and what’s it for? Any kind of app, feature, tool or service.',ex:['A tool that helps flatmates split bills fairly without awkward conversations','A feature for a bus app that warns wheelchair users when a ramp is out of order','A check-in kiosk for a vet’s surgery'],
+   chk:v=>words(v)<6?['tip','Add a little more: what is it, and what problem does it solve?']:['ok','Clear enough to build from.']},
+ users:{l:'Who is it for?',q:'Be specific: their role, how confident they are with technology, and what they care about. Avoid "everyone".',ex:['First-year students sharing a house for the first time; happy on phones but hate money admin','Wheelchair users who travel by bus daily and have been stranded before','Pet owners, often stressed, sometimes carrying an animal'],
+   chk:v=>/\b(every(one|body)|anyone|all users|people in general)\b/i.test(v)?['warn','"Everyone" makes design decisions impossible. Who matters most?']:words(v)<5?['tip','Add their confidence with tech, or what they care about.']:['ok','Specific users. Good.']},
+ situation:{l:'Their situation',q:'Where and when do they use it? On what device? What’s going on around them?',ex:['On the bus home, phone in one hand, patchy signal','At the surgery reception desk, holding a lead, slightly panicked','Late at night on a laptop, after a long shift'],
+   chk:v=>words(v)<5?['tip','Add where, when or which device.']:/\b(phone|mobile|laptop|tablet|kiosk|desk|bus|home|work|night|morning|outside|hand|screen|signal|queue|car|train)\b/i.test(v)?['ok','You’ve set the scene.']:['tip','Mention the place, the time or the device. It changes the layout.']},
+ problem:{l:'The problem today',q:'What goes wrong now, without your design? What does it cost them in time, money, stress or safety?',ex:['Bills are tracked in a group chat, someone always forgets, and it causes arguments','They only find out the ramp is broken when the bus arrives','Paper forms at reception cause a queue and errors in pet records'],
+   chk:v=>words(v)<6?['tip','Describe what goes wrong and why it matters.']:['ok','A real problem worth solving.']},
+ task:{l:'The main task',q:'The one task users must be able to complete. Start with a verb, and say exactly when it’s finished.',ex:['Add last week’s £64 shopping bill, split it between 3 people, and see who owes what','Plan tomorrow’s 8:15 journey and find out whether the ramp is working','Check in a dog called Biscuit for a 3pm appointment and get a queue number'],
+   chk:v=>words(v)<6?['tip','Make it a full task with a clear end point.']:/\b(and|then|until|see|get|find|confirm|receive|know|check)\b/i.test(v)?['ok','Clear: it has an end point.']:['tip','How will the user know they’ve finished? Add the end point.']},
+ success:{l:'What success looks like',q:'How will you know it worked? Write 1–3 statements, plain or "Given… when… then…". One per line.',ex:['Given I’ve added a bill, when I open Balances, then I see who owes what','The participant finishes in under 2 minutes without help','They can explain what happens if a ramp is broken'],
+   chk:v=>!lines(v).length?['tip','Add at least one success statement.']:['ok',lines(v).length+' success statement'+(lines(v).length>1?'s':'')+'.']},
+ screens:{l:'Screens or steps',q:'List the screens in order, one per line. Only what the task needs.',ex:['Home → Add bill → Split → Balances','Journey planner → Results → Route details with ramp status','Welcome → Find appointment → Confirm pet → Queue number'],
+   chk:v=>{const n=lines(v).length;return !n?['tip','List the screens, one per line.']:n>(isPro()?12:8)?['warn',n+' screens is a lot for one build. Can you build a smaller part first?']:n<2?['tip','Most tasks need at least two screens.']:['ok',n+' screens. A focused build.']}},
+ features:{l:'Features and behaviours',q:'In your own words, what must it do? One per line. Use the starters only if they help.',ex:['Splitting can be equal or by custom amounts','Ramp status updates every few seconds, with a time stamp','A big "I need help" button on every screen'],
+   starters:['Search and filter, with a helpful "no results" message','Undo for a few seconds after deleting','Data saved in the browser so it survives a refresh','Step-by-step form where Back never loses data','Confirmation messages announced to screen readers','Simulated loading (1–2 seconds)','Drag to reorder, with Move up/down buttons too'],
+   chk:v=>{const n=lines(v).length;return !n?['tip','What must it do? Even two lines help.']:n>(isPro()?10:6)?['warn',n+' features is a big build'+(isPro()?', even on Pro':' for the free plan')+'. Consider building in two stages.']:['ok',n+' feature'+(n>1?'s':'')+'.']}},
+ states:{l:'States and edge cases',q:'What happens when it’s empty, slow, wrong or unusual? One per line.',ex:['No bills yet: show how to add the first one','Someone types £6.4: explain the format kindly','The ramp status hasn’t updated for 30 minutes'],
+   starters:['Empty, with a helpful first action','Loading','Error, with a way to retry','Offline: explain what still works','Very long names and lots of items','First-time user with extra guidance','Not allowed: explain why'],
+   chk:v=>!lines(v).length?['tip','At least an empty state and an error state, ideally.']:['ok',lines(v).length+' state'+(lines(v).length>1?'s':'')+' to design.']},
+ constraints:{l:'Constraints and accessibility needs',q:'What must the design cope with? Think about time, device, abilities, language and trust.',ex:['Must work one-handed on a phone','Must be usable with a screen reader','Costs must be clear before anyone commits'],
+   starters:['Works one-handed','Usable with a screen reader','Readable at 200% zoom','Plain English for second-language readers','Never uses colour alone to show meaning','Large touch targets (48px+)','Recover from mistakes without starting again'],
+   chk:v=>!lines(v).length?['tip','Even one constraint makes the design more interesting.']:['ok','Constraints set.']},
+ fake:{l:'What to fake',q:'Anything that would need a server, real accounts or real data. How should the prototype pretend?',ex:['Fake sign-in that accepts any details','Ramp status comes from a built-in list that changes on a timer','"Reminder sent" message instead of really sending one'],
+   starters:['Fake sign-in (accept any details)','Simulated payment with a test card only','Scripted chatbot replies by keyword','Data saved in the browser only','"Email sent" message instead of sending'],
+   chk:v=>!lines(v).length?['tip','Does anything need a server or real data? Say how to fake it.']:['ok','Simulation planned.']},
+ out:{l:'Out of scope',q:'What will you deliberately NOT build? This stops Claude over-building and saves messages.',ex:['No account settings or profile pages','No real payments','Only the "split a bill" flow, not the history page'],
+   chk:v=>!lines(v).length?['tip','Naming one or two things NOT to build is surprisingly powerful.']:['ok','Scope fenced.']}
+};
+const ORDER=GROUPS.flatMap(g=>g.ids);
+S.c=S.c||{};
+
+function renderCanvas(){
+  let n=0;
+  $('#canvas').innerHTML=GROUPS.map(g=>`<h3 class="cv-group">${esc(g.h)}</h3>`+g.ids.map(id=>{n++;const f=F[id];const multi=!['idea','users','situation','problem','task'].includes(id)||id==='task';
+    return `<div class="fc" id="fc-${id}"><span class="fnum" aria-hidden="true">${n}</span><div>
+      <label class="f" for="cv-${id}" style="margin-top:0">${esc(f.l)}</label>
+      <p class="fq">${esc(f.q)}</p>
+      <textarea id="cv-${id}" data-cv="${id}" rows="${multi?3:2}" aria-describedby="fb-${id}"></textarea>
+      ${f.starters?`<div class="chips" style="margin-top:8px" aria-label="Idea starters">${f.starters.map(s=>`<button class="chip starter" data-add="${id}" data-text="${esc(s)}">+ ${esc(s)}</button>`).join('')}</div>`:''}
+      <div class="fb" id="fb-${id}" aria-live="polite"></div>
+      <details class="ex"><summary>Show examples</summary><ul>${f.ex.map(e=>`<li>${esc(e)}</li>`).join('')}</ul></details>
+    </div></div>`}).join('')).join('');
+  ORDER.forEach(id=>{const el=$('#cv-'+id);el.value=S.c[id]||'';el.addEventListener('input',()=>{S.c[id]=el.value;save();check(id);progress()});check(id)});
+  progress();
+}
+function check(id){
+  const v=$('#cv-'+id).value;const box=$('#fb-'+id),card=$('#fc-'+id);
+  if(!v.trim()){box.className='fb';box.textContent='';card.classList.remove('ok');return}
+  const [st,msg]=F[id].chk(v);box.className='fb '+st;box.textContent=(st==='ok'?'✓ ':st==='warn'?'⚠ ':'→ ')+msg;card.classList.toggle('ok',st==='ok');
+}
+function progress(){
+  const n=ORDER.filter(id=>(S.c[id]||'').trim()).length;
+  if(typeof updateProj==='function')updateProj();
+  $('#cvCount').textContent=`${n} of ${ORDER.length} parts`;$('#cvBar').style.width=(n/ORDER.length*100)+'%';
+}
+$('#canvas').addEventListener('click',e=>{
+  const b=e.target.closest('[data-add]');if(!b)return;const id=b.dataset.add;const el=$('#cv-'+id);const t=b.dataset.text;
+  if(lines(el.value).some(l=>l.toLowerCase()===t.toLowerCase())){toast('Already added');return}
+  el.value=el.value.trim()?el.value.replace(/\s+$/,'')+'\n'+t:t;S.c[id]=el.value;save();check(id);progress();el.focus();
+});
+$('#cvClear').addEventListener('click',()=>{if(confirm('Clear every part of the canvas?')){S.c={};save();renderCanvas()}});
+
+/* interview + paste */
+const INTERVIEW=`I'm a UX student planning a prototype. My rough idea is: [your idea, even one vague sentence].
+
+Interview me to turn this into a clear scenario. Ask ONE question at a time and wait for my answer. Push me to be specific, and challenge vague answers like "everyone" or "it should be easy".
+
+Cover: who the users are, their situation, the problem today, the main task users must complete and when it's finished, what success looks like, the screens, the features, states and edge cases, constraints and accessibility needs, what needs faking, and what's out of scope.
+
+After about 8–10 questions, write a summary using exactly these headings, each followed by a colon:
+Idea, Users, Situation, Problem, Main task, Success, Screens, Features, States, Constraints, What to fake, Out of scope.
+Use one item per line under list headings. Don't write any code.`;
+$('#interviewText').textContent=INTERVIEW;
+$('#copyInterview').addEventListener('click',()=>copyText(INTERVIEW));
+$('#showInterview').addEventListener('click',e=>{const t=$('#interviewText');t.hidden=!t.hidden;e.target.setAttribute('aria-expanded',String(!t.hidden));e.target.textContent=t.hidden?'Show it':'Hide it'});
+const HEAD={'idea':'idea','the idea':'idea','users':'users','user':'users','who':'users','situation':'situation','context':'situation','problem':'problem','the problem':'problem','problem today':'problem','test task':'task','main task':'task','task':'task','success':'success','success criteria':'success','what success looks like':'success','screens':'screens','screens or steps':'screens','steps':'screens','features':'features','features and behaviours':'features','states':'states','states and edge cases':'states','edge cases':'states','constraints':'constraints','constraints and accessibility':'constraints','constraints and accessibility needs':'constraints','accessibility':'constraints','what to fake':'fake','fake':'fake','out of scope':'out','scope':'out'};
+$('#fillFromSummary').addEventListener('click',()=>{
+  const txt=$('#pasteSummary').value;if(!txt.trim()){$('#fillMsg').textContent='Paste a summary first.';return}
+  const got={};let cur=null;
+  txt.split('\n').forEach(raw=>{
+    const m=raw.match(/^\s*(?:#{1,6}\s*)?(?:\*\*|__)?\s*([A-Za-z][A-Za-z &/]{1,40}?)\s*(?:\*\*|__)?\s*:\s*(?:\*\*|__)?\s*(.*)$/);
+    const key=m&&HEAD[m[1].toLowerCase().replace(/\s*&\s*/g,' and ').trim()];
+    if(key){cur=key;got[cur]=got[cur]||[];if(m[2].trim())got[cur].push(m[2].trim());return}
+    const h=raw.match(/^\s*#{1,6}\s*(.+?)\s*$/);const hk=h&&HEAD[h[1].toLowerCase().replace(/[*_:]/g,'').trim()];
+    if(hk){cur=hk;got[cur]=got[cur]||[];return}
+    if(cur&&raw.trim())got[cur].push(raw.replace(/^\s*(?:[-*•]|\d+[.)])\s*/,'').trim());
+  });
+  const keys=Object.keys(got).filter(k=>got[k].length);
+  if(!keys.length){$('#fillMsg').textContent='No matching headings found. Use headings like "Users:" and "Main task:".';return}
+  if(keys.some(k=>(S.c[k]||'').trim())&&!confirm('Some parts already have text. Replace them with the summary?'))return;
+  keys.forEach(k=>{const single=['idea','users','situation','problem','task'].includes(k);S.c[k]=single?got[k].join(' '):got[k].join('\n')});
+  save();renderCanvas();$('#fillMsg').textContent=`Filled ${keys.length} part${keys.length>1?'s':''}. Check them below.`;
+});
+
+/* settings */
+['cDevice','cFid'].forEach(id=>{const el=$('#'+id);if(S.f&&S.f[id]!==undefined&&el.querySelector(`option[value="${S.f[id]}"]`))el.value=S.f[id];el.addEventListener('change',()=>{S.f[id]=el.value;save();dsHint()})});
+['cSwitch','cAsk'].forEach(id=>{const el=$('#'+id);if(S.f&&S.f[id]!==undefined)el.checked=S.f[id];el.addEventListener('change',()=>{S.f[id]=el.checked;save()})});
+function dsHint(){const el=$('#dsCurrent2');if(el){const d=dsObj();el.textContent=d?d.name:'none yet'}if(typeof updateProj==='function')updateProj()}
+
+/* assemble */
+function compose(){
+  const c=id=>(S.c[id]||'').trim();const ph=(id,p)=>c(id)||p;const L=id=>lines(c(id));
+  
+  const dev={mobile:'Design mobile-first for a 375px-wide phone; it should still work on a laptop.',desktop:'Design for a laptop screen (about 1280px wide); it should not break on a phone.',both:'Make it fully responsive for a 375px phone and a 1280px laptop.',kiosk:'Design for a large touchscreen kiosk: touch targets of at least 48px and no hover-only interactions.',tablet:'Design for a tablet held in either orientation, with touch-friendly targets.'}[$('#cDevice').value];
+  const fid={low:'Low fidelity: greyscale, simple boxes instead of images, so people focus on the flow.',mid:'Mid fidelity: the design system’s default look, neutral colours, realistic text, simple coloured boxes instead of photos.',high:'High fidelity: polished, with one consistent accent colour, realistic content and simple SVG icons (no real photos).'}[$('#cFid').value];
+  const list=(id,num)=>L(id).map((x,i)=>(num?`${i+1}. `:'- ')+x).join('\n');
+  let p=`I'm a UX student who doesn't write code. Build a clickable prototype.
+
+THE IDEA
+${ph('idea','[your idea in one sentence]')}
+
+WHO AND WHY
+- Users: ${ph('users','[who it’s for]')}
+- Their situation: ${ph('situation','[where, when, which device]')}`;
+  if(c('problem'))p+=`\n- The problem today: ${c('problem')}`;
+  p+=`\n\nTHE MAIN TASK\n${ph('task','[the one task users must be able to complete, with its end point]')}`;
+  if(L('success').length)p+=`\nSuccess looks like:\n${list('success')}`;
+  if(L('screens').length)p+=`\n\nSCREENS (in order)\n${list('screens',true)}`;
+  if(L('features').length)p+=`\n\nFEATURES AND BEHAVIOURS (build only these)\n${list('features')}`;
+  if(L('states').length||$('#cSwitch').checked){
+    p+=`\n\nSTATES AND EDGE CASES`;
+    if(L('states').length)p+='\n'+list('states');
+    if($('#cSwitch').checked)p+=`\n- Add a hidden panel that opens with Shift+S so I can switch between ${L('states').length?'these states':'the main states (empty, loading, error, success)'} while I review it. Users shouldn’t see it otherwise.`;
+  }
+  if(L('constraints').length)p+=`\n\nCONSTRAINTS AND ACCESSIBILITY NEEDS (design for these)\n${list('constraints')}`;
+  p+=`\n\nWHAT TO FAKE`;
+  if(L('fake').length)p+='\n'+list('fake');
+  p+=`\n- No server, login or real APIs: simulate anything like that with JavaScript and fake data.\n- Never collect real passwords, card numbers or personal data. Label any fake sign-in or payment screen "Prototype — don’t enter real details".`;
+  if(L('out').length)p+=`\n\nOUT OF SCOPE (don’t build)\n${list('out')}`;
+  p+=`
+
+FORMAT
+- One self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are from public CDNs.
+- Show it as an artifact so I can preview it.
+
+DESIGN SYSTEM
+- Use ${dsLine()}
+
+REQUIREMENTS
+- Realistic fake content in UK English. No lorem ipsum.
+- Everything needed for the main task must work. Anything else shows "This part isn’t in the prototype yet."
+- Accessibility: WCAG 2.2 AA, with a label on every input, visible keyboard focus, sensible headings, good colour contrast and clear error messages.
+- ${dev}
+- ${fid}
+- Mark where each screen starts with a code comment.`;
+  if($('#cAsk').checked)p+=`\n\nBEFORE YOU BUILD\nAsk me up to 3 questions about anything unclear or risky in this brief. Then list the screens in no more than 8 bullet points and wait for me to say "go".`;
+  return p;
+}
+function toWork(){
+  const filled=ORDER.filter(id=>(S.c[id]||'').trim()).length;
+  if(!filled){toast('Fill in at least your idea first');$('#cv-idea').focus();return}
+  const ws=$('#workspace');
+  if(ws.value.trim()&&!confirm('Replace what’s in your workspace with the newly assembled prompt?'))return;
+  ws.value=compose();S.work=ws.value;save();gate();
+  document.getElementById('work').scrollIntoView({behavior:'smooth'});toast('Prompt assembled in the workspace');
+}
+$('#toWork').addEventListener('click',toWork);$('#toWork2').addEventListener('click',toWork);
+
+
+/* ---------- PRO PROJECT KIT ---------- */
+const LABELS={idea:'Idea',users:'Users',situation:'Situation',problem:'Problem today',task:'Main task',success:'Success looks like',screens:'Screens',features:'Features and behaviours',states:'States and edge cases',constraints:'Constraints and accessibility needs',fake:'What to fake',out:'Out of scope'};
+function projText(){
+  const t=(S.c.task||'').trim();
+  return `This Project is a UX student's prototype. The student does not write code.
+
+Always:
+- Produce one self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are from public CDNs.
+- Use ${dsLine()}
+- Use realistic fake content in UK English. Never collect real passwords, card numbers or personal data, and label fake sign-in or payment screens "Prototype — don't enter real details".
+- Everything needed for the main task must work. Anything else shows "This part isn't in the prototype yet."
+- Meet WCAG 2.2 AA: a label on every input, visible keyboard focus, sensible headings, good contrast and clear error messages.
+- When I ask for a change, change only that and keep everything else exactly the same.
+- Ask before building anything large or ambiguous.
+- Show results as artifacts and explain changes in plain English, not code.
+
+The brief is in the knowledge file "scenario.md". Treat it as the source of truth, and tell me if a request conflicts with it.${t?`\n\nCurrent main task: ${t}`:''}`;
+}
+function updateProj(){const el=$('#projInstr2');if(el)el.textContent=projText()}
+document.addEventListener('click',e=>{if(e.target.closest('[data-copyproj]'))copyText(projText())});
+$('#dlScenario').addEventListener('click',()=>{
+  const filled=ORDER.filter(id=>(S.c[id]||'').trim());
+  if(!filled.length){toast('Your canvas is empty');return}
+  
+  const md='# Scenario\n\n'+ORDER.map(id=>{const v=(S.c[id]||'').trim();if(!v)return '';const L=lines(v);return `## ${LABELS[id]}\n\n`+(L.length>1?L.map(x=>'- '+x).join('\n'):v)+'\n'}).filter(Boolean).join('\n')+`\n## Build settings\n\n- Design system: ${dsName()}\n- Device: ${$('#cDevice').selectedOptions[0].text}\n- Fidelity: ${$('#cFid').selectedOptions[0].text}\n`;
+  download('scenario.md',md,'text/markdown');
+});
+
+/* ---------- QUALITY GATE ---------- */
+const CHECKS=[
+ {l:'Names the users',re:/\b(users?|students?|customers?|people|visitors?|workers?|parents?|patients?|staff|owners?|drivers?)\b/i,tip:'Who is this for? One sentence about the user changes a lot of design decisions.'},
+ {l:'States a clear task',re:/\b(task|so that|be able to|achieve|complete|success|goal)\b/i,tip:'Add the main task users must complete, with a clear end point.'},
+ {l:'Specifies the output format',re:/\b(html|single file|one file|inline|self-contained|artifact)\b/i,tip:'Say "one self-contained HTML file with inline CSS and JavaScript".'},
+ {l:'Chooses a visual system',re:/\b(design system|pico|bootstrap|gov\.?uk|nhs|uswds|bulma|shoelace|carbon|material|plain html|style guide)\b/i,tip:'Name a design system, or ask for a plain, consistent style.'},
+ {l:'Covers states',re:/\b(empty|loading|error|offline|success|state|no results)\b/i,tip:'What happens when there’s nothing there, it’s loading, or it goes wrong?'},
+ {l:'Uses fake content',re:/\b(fake|sample|realistic|dummy|mock|placeholder content|example data)\b/i,tip:'Ask for realistic fake content, so users react to something believable and nothing real is collected.'},
+ {l:'Includes accessibility',re:/\b(accessib\w*|wcag|keyboard|contrast|screen reader|labels?)\b/i,tip:'Add WCAG 2.2 AA basics: labels, keyboard focus, contrast, clear errors.'},
+ {l:'Fences the scope',re:/\b(only|don'?t|do not|not in (the|this) prototype|keep everything else|nothing else)\b/i,tip:'Say what NOT to build, or "build only these". Scope creep costs messages.'},
+ {l:'Names the device',re:/\b(mobile|phone|desktop|laptop|tablet|responsive|kiosk|touch\w*|\d{3,4}px)\b/i,tip:'Phone, laptop or kiosk? Layout depends on it.'},
+ {l:'Checks before building',re:/\b(ask me|questions?|plan|before you build|wait for|confirm)\b/i,tip:'Add "Ask me up to 3 questions, then list the screens and wait for go."'}
+];
+function score(text){return CHECKS.map(c=>c.re.test(text))}
+function gate(){
+  const t=$('#workspace').value;const r=score(t);const n=r.filter(Boolean).length;
+  const words=t.trim()?t.trim().split(/\s+/).length:0;
+  $('#wc').textContent=words+' words'+(words>450?' · long prompts use more budget':'');
+  $('#scoreNum').textContent=n+'/10';
+  const bar=$('#scoreBar');bar.style.width=(n*10)+'%';bar.style.background=n>=8?'var(--green)':n>=5?'var(--orange)':'var(--red)';
+  $('#scoreMsg').textContent=!words?'Start writing, or assemble a prompt from your canvas.':n>=8?(isPro()?'Ready to send. Paste it into a new chat in your Project.':'Ready to send. Copy it into a new Claude chat.'):n>=5?'Getting there. The open items below usually cost follow-up messages.':'Likely to need several follow-ups. Add the missing ingredients.';
+  $('#gate').innerHTML=CHECKS.map((c,i)=>`<li class="${r[i]?'ok':''}"><span class="ic" aria-hidden="true">${r[i]?'✓':i+1}</span><span>${esc(c.l)}<span class="sr">${r[i]?' (done)':' (missing)'}</span><span class="tip">${esc(c.tip)}</span></span></li>`).join('');
+}
+const ws=$('#workspace');ws.value=S.work||'';
+ws.addEventListener('input',()=>{S.work=ws.value;save();gate()});
+$('#copyWork').addEventListener('click',()=>{if(!ws.value.trim()){toast('Nothing to copy');return}copyText(ws.value)});
+$('#clearWork').addEventListener('click',()=>{if(ws.value.trim()&&confirm('Clear the workspace?')){ws.value='';S.work='';save();gate()}});
+
+/* ---------- PATTERNS ---------- */
+const PATS=[
+ {t:'Ask before building',w:'Any new build, especially open briefs',p:'Before writing any code, ask me up to [3] questions about anything unclear or risky in this brief. Wait for my answers.'},
+ {t:'User story → acceptance criteria',w:'Turning an idea into a clear scope',p:'As a [type of user], I want to [goal] so that [benefit].\nAcceptance criteria:\n- Given [situation], when I [action], then [result].\n- Given [situation], when I [action], then [result].\nBuild only what’s needed to meet these criteria.'},
+ {t:'Constraints first',w:'Stopping Claude over-building',p:'Constraints (these matter more than anything else):\n- [maximum screens]\n- [no typing / one thumb / under 2 minutes]\n- [must work for someone who …]\nNow the idea: [describe it].'},
+ {t:'Three variants',w:'Exploring before committing',p:'Create three different designs for [screen or feature] in one prototype, with tabs labelled A, B and C to switch between them. Make them genuinely different in [layout / flow / wording]. Under the tabs, list one strength and one risk for each.'},
+ {t:'State switcher',w:'Previewing edge cases',p:'Add a hidden panel that opens with Shift+S. It should switch the prototype between these states: [empty, loading, error, offline, lots of data]. Users must not see the panel otherwise.'},
+ {t:'Self-critique, then fix',w:'Catching obvious issues cheaply',p:'Review this prototype against Nielsen’s 10 usability heuristics and WCAG 2.2 AA. List the top 5 issues in a table (issue, where, severity). Then fix only the top 3 and tell me what you changed.'},
+ {t:'Scope fence',w:'Precise edits',p:'Change only [the thing]. Do not change [the parts that must stay the same]. Keep all other layout, content and behaviour exactly as it is.'},
+ {t:'Simulate a persona',w:'Spotting confusing moments',p:'Pretend to be [persona, e.g. a first-time user who reads English as a second language] attempting this task: [task]. Narrate step by step where you’d hesitate or get confused. Don’t fix anything yet.'},
+ {t:'Reverse prompt',w:'Learning prompt-craft',p:'Write the single prompt that would have produced this prototype in one go, including the format, design system, features, states and constraints. Keep it under 250 words.'},
+ {t:'Explain like I’m the client',w:'Reports and presentations',p:'Explain this prototype to a non-technical client in under 120 words: who it’s for, the main flow, and the decisions that make it easier to use. No code or technical terms.'}
+];
+function renderPats(){
+  $('#patGrid').innerHTML=PATS.map((x,i)=>`<div class="card pat"><div class="row between"><h3 style="margin:0">${esc(x.t)}</h3><span class="pill">${esc(x.w)}</span></div>
+    <div class="tpl">${esc(x.p).replace(/\[([^\]]+)\]/g,'<span class="hl">[$1]</span>')}</div>
+    <div class="row"><button class="btn sm primary" data-ins="${i}">Insert into workspace</button><button class="btn sm" data-cp="${i}">Copy</button></div></div>`).join('');
+}
+$('#patGrid').addEventListener('click',e=>{
+  const ins=e.target.closest('[data-ins]'),cp=e.target.closest('[data-cp]');
+  if(ins){const p=PATS[+ins.dataset.ins].p;ws.value=ws.value.trim()?ws.value.replace(/\s+$/,'')+'\n\n'+p:p;S.work=ws.value;save();gate();toast('Inserted into workspace')}
+  if(cp)copyText(PATS[+cp.dataset.cp].p);
+});
+
+/* ---------- FAKE IT ---------- */
+const FAKE=[
+ ['Login / accounts','Any details are accepted; show "Signed in as Sam" afterwards.','"Fake the sign-in: accept any input and never store passwords."'],
+ ['Payments','A card form that only accepts the test number 4242 4242 4242 4242, with a "Prototype" label.','"Simulate payment; label it as a prototype; never ask for real card details."'],
+ ['Database','Fake data in JavaScript arrays, optionally saved in the browser.','"Keep data in JavaScript; save to localStorage so it survives a refresh."'],
+ ['AI / chatbot','Scripted replies picked by keywords, with a typing delay.','"Script the bot’s replies by keyword. No real AI."'],
+ ['Email / SMS','A toast or panel saying "Email sent (simulated)", showing the message.','"Show the message that would be sent instead of sending it."'],
+ ['Maps / location','A drawn map or Leaflet with fixed pins; a pretend "your location".','"Use a fixed fake location and a few pins."'],
+ ['Real-time updates','Numbers or items that change on a timer.','"Simulate updates every few seconds."'],
+ ['File upload','Accept the file but show only its name and a fake progress bar.','"Show the file name and a fake upload; don’t read the file."'],
+ ['Search the web','Search a fixed dataset of 20–50 realistic items.','"Search a built-in list of realistic items."']
+];
+$('#fakeBody').innerHTML=FAKE.map(r=>`<tr><td><strong>${esc(r[0])}</strong></td><td>${esc(r[1])}</td><td class="muted">${esc(r[2])}</td></tr>`).join('');
+
+document.addEventListener('vp:ds',dsHint);
+document.addEventListener('vp:plan',()=>{ORDER.forEach(check);gate();updateProj()});
+
+/* ---------- INIT ---------- */
+renderCanvas();dsHint();updateProj();gate();renderPats();})();
+</script>
+<script>
+/* ---------- Dictation (Web Speech API) ---------- */
+(function(){
+'use strict';
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const SEL='#builder input[type=text],#builder textarea,#compose textarea,#work textarea';
+const MIC='<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>';
+let active=null;
+function toast(m){const t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('show');clearTimeout(t._dh);t._dh=setTimeout(()=>t.classList.remove('show'),2600)}
+function nameOf(f){const l=f.id&&document.querySelector('label[for="'+f.id+'"]');return l?l.textContent.replace(/\(.*?\)/g,'').trim():'this field'}
+if(!SR){
+  document.querySelectorAll('.dictate-hint .dh-text').forEach(e=>e.textContent='Prefer to talk? The dictation buttons need Chrome, Edge or Safari. In other browsers, use your device’s own dictation: Windows key + H on Windows, or press the Fn (Globe) key twice on a Mac.');
+  return;
+}
+function tidy(t,multi){
+  t=t.trim();
+  t=t.replace(/\s*\b(new line|next line|new paragraph)\b\s*/gi,multi?'\n':' ')
+     .replace(/\s*\bfull stop\b/gi,'.').replace(/\s*\bcomma\b/gi,',').replace(/\s*\bquestion mark\b/gi,'?')
+     .replace(/\s*\bexclamation mark\b/gi,'!').replace(/\s*\bcolon\b/gi,':');
+  return t;
+}
+function joinText(a,b){if(!b)return a;if(!a)return b;return /[\s\n]$/.test(a)||/^[\n.,?!:]/.test(b)?a+b:a+' '+b}
+function cap(base,txt){txt=txt.replace(/([.?!]\s+|\n)([a-z])/g,(m,a,c)=>a+c.toUpperCase());return (!base.trim()||/[.?!\n]\s*$/.test(base))?txt.replace(/^\s*([a-z])/,(m,c)=>m.replace(c,c.toUpperCase())):txt}
+function finish(me){
+  me.b.classList.remove('on');me.w.classList.remove('listening');
+  me.b.setAttribute('aria-pressed','false');me.b.setAttribute('aria-label','Dictate into '+nameOf(me.f));me.b.title='Dictate';
+  if(active===me)active=null;
+}
+function start(f,b,w){
+  const multi=f.tagName==='TEXTAREA';
+  const rec=new SR();rec.lang='en-GB';rec.continuous=true;rec.interimResults=true;
+  const me={f,b,w,rec,base:f.value,fin:''};active=me;
+  b.classList.add('on');w.classList.add('listening');b.setAttribute('aria-pressed','true');b.setAttribute('aria-label','Stop dictation');b.title='Stop dictation';
+  const write=interim=>{f.value=joinText(me.base,cap(me.base,joinText(me.fin,interim)));f.dispatchEvent(new Event('input',{bubbles:true}))};
+  rec.onresult=e=>{let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){const t=tidy(e.results[i][0].transcript,multi);if(!t)continue;
+      if(e.results[i].isFinal)me.fin=joinText(me.fin,t);else interim=joinText(interim,t)}
+    write(interim)};
+  rec.onerror=e=>{const m={'not-allowed':'Microphone access is blocked. Allow it in your browser’s site settings, then try again.','service-not-allowed':'Dictation isn’t allowed here. Try opening the page directly in Chrome, Edge or Safari.','no-speech':'I didn’t catch anything. Press the microphone and try again.','audio-capture':'No microphone was found.','network':'Dictation needs an internet connection.'}[e.error];if(m)toast(m)};
+  rec.onend=()=>{write('');finish(me)};
+  try{rec.start();f.focus();toast('Listening… press the microphone again to stop')}catch(err){finish(me);toast('Dictation couldn’t start. Try again.')}
+}
+function toggle(f,b,w){
+  if(active&&active.f===f){try{active.rec.stop()}catch(e){finish(active)}return}
+  if(active){const old=active;try{old.rec.abort()}catch(e){}finish(old)}
+  start(f,b,w);
+}
+function attach(){
+  document.querySelectorAll(SEL).forEach(f=>{
+    if(f.dataset.mic)return;f.dataset.mic='1';
+    const w=document.createElement('div');w.className='mic-wrap';f.parentNode.insertBefore(w,f);w.appendChild(f);
+    const b=document.createElement('button');b.type='button';b.className='mic-btn';b.innerHTML=MIC;
+    b.title='Dictate';b.setAttribute('aria-pressed','false');b.setAttribute('aria-label','Dictate into '+nameOf(f));
+    b.addEventListener('click',()=>toggle(f,b,w));w.appendChild(b);
+  });
+}
+attach();
+const cv=document.getElementById('canvas');if(cv)new MutationObserver(attach).observe(cv,{childList:true});
+document.addEventListener('vp:plan',()=>{if(active){try{active.rec.stop()}catch(e){}}});
+})();
+</script>
+</body>
+</html>
