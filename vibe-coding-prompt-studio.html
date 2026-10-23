@@ -796,7 +796,7 @@ document.querySelectorAll('[data-setlevel]').forEach(b=>b.addEventListener('clic
 document.querySelectorAll('[data-setplan]').forEach(b=>b.addEventListener('click',()=>{V.plan=b.dataset.setplan;save();apply();document.dispatchEvent(new CustomEvent('vp:plan'))}));
 document.getElementById('themeBtn').addEventListener('click',()=>{const cur=V.theme||(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');V.theme=cur==='dark'?'light':'dark';save();apply()});
 
-document.getElementById('toAudio').addEventListener('click',e=>{e.currentTarget.href='vibe-coding-audio-guide.html?level='+document.body.dataset.level+'&plan='+document.body.dataset.plan});
+document.getElementById('toAudio').addEventListener('click',e=>{e.currentTarget.href='index.html?level='+document.body.dataset.level+'&plan='+document.body.dataset.plan});
 document.getElementById('resetBtn').addEventListener('click',()=>{
   if(!confirm('Reset the studio?\n\nThis clears everything you\'ve entered at both levels: the prompt builder, your design system choice, the scenario canvas, the workspace and checklists. Your level, plan and theme stay as they are.\n\nDownload or copy anything you want to keep first.'))return;
   try{localStorage.removeItem('vpstudio.l1');localStorage.removeItem('vpstudio.l2')}catch(e){}
