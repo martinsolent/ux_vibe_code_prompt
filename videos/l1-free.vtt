@@ -1,0 +1,76 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:03.688
+This is the Prompt Studio, at Level 1, on the free plan.
+
+00:00:03.688 --> 00:00:07.548
+It turns your idea into a complete, well structured prompt for Claude.
+
+00:00:07.548 --> 00:00:13.780
+The switches at the top change the level and the plan, and the Audio guide button opens the narrated walkthrough.
+
+00:00:15.333 --> 00:00:16.507
+Start with Your plan.
+
+00:00:16.507 --> 00:00:20.920
+On the free plan, your usage refills over a few hours, so every message counts.
+
+00:00:20.920 --> 00:00:27.233
+Tick off the setup checklist as you go: sign in, check that Artifacts is on, and make a folder for your versions.
+
+00:00:28.733 --> 00:00:30.315
+Next, choose a design system.
+
+00:00:30.315 --> 00:00:35.333
+Use the filters to narrow the list, press Preview to see a sample screen, then press Select.
+
+00:00:35.333 --> 00:00:37.733
+Your choice flows straight into your prompt.
+
+00:00:39.300 --> 00:00:40.559
+Now the prompt builder.
+
+00:00:40.559 --> 00:00:41.817
+Not sure what to write?
+
+00:00:41.817 --> 00:00:43.678
+Press an example to fill the form.
+
+00:00:43.678 --> 00:00:48.220
+Then make it yours: your idea, your users, the main task, and the screens it needs.
+
+00:00:49.733 --> 00:00:53.087
+Choose the device and fidelity, then the output format.
+
+00:00:53.087 --> 00:00:54.855
+One HTML file is the easiest.
+
+00:00:54.855 --> 00:00:59.183
+Tick Ready for Desktop Tester if you'll run your user test in that app.
+
+00:01:00.700 --> 00:01:02.789
+Your prompt builds live on the right.
+
+00:01:02.789 --> 00:01:05.894
+Press Copy prompt, and paste it into a new Claude chat.
+
+00:01:05.894 --> 00:01:07.870
+Check Claude's plan, then reply go.
+
+00:01:09.433 --> 00:01:13.590
+After your first build, use the prompt library for small, precise fixes.
+
+00:01:13.590 --> 00:01:16.188
+Each prompt already names your design system.
+
+00:01:16.188 --> 00:01:19.883
+Replace the square brackets with your own details, then copy it.
+
+00:01:21.400 --> 00:01:25.897
+If something goes wrong, Troubleshooting has fixes for the most common problems.
+
+00:01:25.897 --> 00:01:29.157
+Download every working version, so you can always go back.
+
+00:01:29.157 --> 00:01:30.000
+That's Level 1.
