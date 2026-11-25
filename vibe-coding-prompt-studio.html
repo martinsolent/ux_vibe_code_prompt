@@ -379,6 +379,7 @@ html{scroll-padding-top:116px}
 .seg-ctl.plan button[aria-pressed="true"]{background:var(--purple)}
 body[data-level="1"] [data-level="2"],body[data-level="2"] [data-level="1"],
 body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"]{display:none!important}
+.vp-video{margin:14px 0 20px;max-width:860px}.vp-video video{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;border:1px solid var(--border);background:#0d1117}.vp-video figcaption{margin-top:8px;font-size:14px;color:var(--muted)}
 </style>
 </head>
 <body data-level="1" data-plan="free">
@@ -401,6 +402,8 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 <div data-level="1">
   <div class="eyebrow ed-label"></div>
   <h1>Vibe-code your first prototype</h1>
+  <figure class="vp-video" data-plan="free"><video controls preload="none" playsinline poster="videos/l1-free.jpg" aria-label="Video walkthrough of Level 1 on the free plan"><source src="videos/l1-free.mp4" type="video/mp4"><track kind="captions" src="videos/l1-free.vtt" srclang="en" label="English" default></video><figcaption>Watch first: a 1 min 31 s walkthrough of Level 1 on the free plan. Captions are on; use the CC button to turn them off. Every step is also written out below.</figcaption></figure>
+  <figure class="vp-video" data-plan="pro"><video controls preload="none" playsinline poster="videos/l1-pro.jpg" aria-label="Video walkthrough of Level 1 on Claude Pro"><source src="videos/l1-pro.mp4" type="video/mp4"><track kind="captions" src="videos/l1-pro.vtt" srclang="en" label="English" default></video><figcaption>Watch first: a 1 min 42 s walkthrough of Level 1 on Claude Pro. Captions are on; use the CC button to turn them off. Every step is also written out below.</figcaption></figure>
   <p class="lede">You don't need to code. You'll describe a prototype in plain English and let Claude build it on top of a real open-source design system. The skill you're practising is <strong>specifying and steering</strong>, not programming.</p>
 
   <div class="flow" aria-label="Workflow">
@@ -429,13 +432,15 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 <div data-level="2">
   <div class="eyebrow ed-label"></div>
   <h1>Prompt Studio: design your own prototypes</h1>
+  <figure class="vp-video" data-plan="free"><video controls preload="none" playsinline poster="videos/l2-free.jpg" aria-label="Video walkthrough of Level 2 on the free plan"><source src="videos/l2-free.mp4" type="video/mp4"><track kind="captions" src="videos/l2-free.vtt" srclang="en" label="English" default></video><figcaption>Watch first: a 1 min 21 s walkthrough of Level 2 on the free plan. Captions are on; use the CC button to turn them off. Every step is also written out below.</figcaption></figure>
+  <figure class="vp-video" data-plan="pro"><video controls preload="none" playsinline poster="videos/l2-pro.jpg" aria-label="Video walkthrough of Level 2 on Claude Pro"><source src="videos/l2-pro.mp4" type="video/mp4"><track kind="captions" src="videos/l2-pro.vtt" srclang="en" label="English" default></video><figcaption>Watch first: a 1 min 33 s walkthrough of Level 2 on Claude Pro. Captions are on; use the CC button to turn them off. Every step is also written out below.</figcaption></figure>
   <p class="lede">In Level 1 you followed a recipe. Here you write your own. Start from your own idea, for any kind of app, feature, tool or situation, and build it up with coaching at every step. Then shape the prompt yourself and check its quality before you spend a message on it.</p>
   <div class="grid g3">
     <div class="card"><span class="pill purple">1 · Define</span><p class="small muted" style="margin-top:8px">Describe your own scenario on the canvas, with a coaching question, examples and live feedback for each part. Stuck? Let Claude interview you.</p></div>
     <div class="card"><span class="pill blue">2 · Craft</span><p class="small muted" style="margin-top:8px">Edit the assembled prompt freely, or write one from scratch. Add proven prompt patterns. The quality gate scores it live.</p></div>
     <div class="card"><span class="pill green">3 · Build</span><p class="small muted" style="margin-top:8px">Send it to Claude, judge the result, and steer it with small, precise follow-up prompts.</p></div>
   </div>
-  <div class="callout"><p><strong>Same rules as Level 1:</strong> one self-contained HTML file and fake data only. What changes is that <em>you</em> decide the scope, and you must be able to explain every decision.</p></div>
+  <div class="callout"><p><strong>Same rules as Level 1:</strong> one HTML file (or separate pages, if you choose) and fake data only. What changes is that <em>you</em> decide the scope, and you must be able to explain every decision.</p></div>
 </div>
 </section>
 
@@ -585,7 +590,7 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 <section id="builder" data-level="1">
   <div class="eyebrow">Steps 2 &amp; 3</div>
   <h2>Prompt builder</h2>
-  <p class="sec-intro">Fill this in and you'll get a complete first prompt that asks Claude for a single HTML file with inline CSS and JavaScript, using your design system. The better your answers, the fewer messages you'll spend fixing things.</p>
+  <p class="sec-intro">Fill this in and you'll get a complete first prompt that asks Claude for a prototype in the format you choose (one HTML file, or separate pages), using your design system. The better your answers, the fewer messages you'll spend fixing things.</p>
   <p class="small muted dictate-hint" style="margin:-8px 0 16px">🎤 <span class="dh-text">Prefer to talk? Press the microphone in any field and speak. Say "new line", "comma" or "full stop" for punctuation, and press it again to stop. Your browser may send the audio to its speech service, so don't dictate personal details.</span></p>
 
   <div class="grid g2">
@@ -618,6 +623,24 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
           </select>
         </div>
       </div>
+      <div class="grid g2" style="gap:10px;margin-top:2px">
+        <div>
+          <label class="f" for="pFormat">Output format</label>
+          <select id="pFormat">
+            <option value="single">One HTML file (recommended)</option>
+            <option value="pages">Separate pages, style.css and script.js</option>
+          </select>
+        </div>
+        <div>
+          <span class="f" style="display:block">User testing</span>
+          <label class="check"><input type="checkbox" id="oTest"> Ready for Desktop Tester</label>
+        </div>
+      </div>
+      <p class="small" id="fmtNote1" style="margin:4px 0 0;color:var(--orange)" aria-live="polite"></p>
+      <details class="small" style="margin:8px 0 0"><summary style="cursor:pointer"><strong>Which format should I choose?</strong></summary>
+          <p class="muted" style="margin:6px 0 0"><strong>One HTML file</strong> is the easiest. It previews fully in Claude, it's one file to download, and replacing it later is a single upload.</p>
+          <p class="muted" style="margin:6px 0 0"><strong>Separate pages</strong> give each screen its own page that you can open and edit. But links between pages don't work in Claude's preview, there are more files to save and upload, and it uses more of your allowance.</p>
+          <p class="muted" style="margin:6px 0 0"><strong>Ready for Desktop Tester</strong> works with either format. Tick it if you'll run your user test in the Desktop Tester app: it adds screen addresses and button ids so tasks tick themselves off.</p></details>
       <fieldset style="border:0;padding:0;margin:12px 0 0">
         <legend class="f" style="margin-bottom:4px">Extras</legend>
         <label class="check"><input type="checkbox" id="oPlan" checked> Ask Claude to confirm a plan before building <span class="muted">(saves rebuilds)</span></label>
@@ -654,7 +677,7 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 <section id="settings" data-level="2">
   <div class="eyebrow">Build</div>
   <h2>Build settings</h2>
-  <p class="sec-intro">Choose the device and fidelity, then assemble your prompt from the canvas.</p>
+  <p class="sec-intro">Choose the device, fidelity and output format, then assemble your prompt from the canvas.</p>
   <div class="card" >
     <p class="small" style="margin:0 0 4px">Design system: <strong id="dsCurrent2">none yet</strong> <span class="muted">(chosen in the section above)</span></p>
     <div class="grid g2" style="gap:10px">
@@ -663,6 +686,17 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
       <div><label class="f" for="cFid">Fidelity</label>
         <select id="cFid"><option value="mid">Mid: real components, neutral look</option><option value="low">Low: greyscale wireframe feel</option><option value="high">High: polished and branded</option></select></div>
     </div>
+    <div class="grid g2" style="gap:10px;margin-top:10px">
+      <div><label class="f" for="cFormat">Output format</label>
+        <select id="cFormat"><option value="single">One HTML file (recommended)</option><option value="pages">Separate pages, style.css and script.js</option></select></div>
+      <div><span class="f" style="display:block">User testing</span>
+        <label class="check"><input type="checkbox" id="cTest"> Ready for Desktop Tester</label></div>
+    </div>
+    <p class="small" id="fmtNote2" style="margin:4px 0 0;color:var(--orange)" aria-live="polite"></p>
+    <details class="small" style="margin:8px 0 0"><summary style="cursor:pointer"><strong>Which format should I choose?</strong></summary>
+          <p class="muted" style="margin:6px 0 0"><strong>One HTML file</strong> is the easiest. It previews fully in Claude, it's one file to download, and replacing it later is a single upload.</p>
+          <p class="muted" style="margin:6px 0 0"><strong>Separate pages</strong> give each screen its own page that you can open and edit. But links between pages don't work in Claude's preview, there are more files to save and upload, and it uses more of your allowance.</p>
+          <p class="muted" style="margin:6px 0 0"><strong>Ready for Desktop Tester</strong> works with either format. Tick it if you'll run your user test in the Desktop Tester app: it adds screen addresses and button ids so tasks tick themselves off.</p></details>
     <label class="check" style="margin-top:12px"><input type="checkbox" id="cSwitch" checked> Add a hidden state switcher (Shift+S) so you can preview each state</label>
     <label class="check"><input type="checkbox" id="cAsk" checked> Ask Claude to question me and plan before building <span class="muted">(recommended)</span></label>
     <div class="row" style="margin-top:12px"><button class="btn primary" id="toWork2">Assemble prompt into workspace ↓</button></div>
@@ -731,7 +765,7 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 <section id="fake" data-level="2">
   <div class="eyebrow">Scope</div>
   <h2>Fake it honestly</h2>
-  <p class="sec-intro">A single HTML file can't do everything a real app does. It doesn't need to; it only needs to feel real enough for the main task. Here's how to simulate the hard parts, and what to tell Claude.</p>
+  <p class="sec-intro">A prototype made of HTML files can't do everything a real app does. It doesn't need to; it only needs to feel real enough for the main task. Here's how to simulate the hard parts, and what to tell Claude.</p>
   <div class="card table-scroll" style="padding:8px">
     <table class="t">
       <thead><tr><th>Real thing</th><th>How to fake it</th><th>Say to Claude</th></tr></thead>
@@ -766,6 +800,15 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
       <p class="small muted">Reply <em>"Continue from exactly where you stopped."</em> For big prototypes, ask for fewer screens and build one flow at a time.</p>
     </div>
     <div class="card">
+      <h3>Links between my pages don't work in the preview</h3>
+      <p class="small muted">That's normal for separate pages: Claude's preview shows one file at a time. Save every file into one folder, then open index.html in Chrome or Edge. If links still break, check they're relative (<em>href="menu.html"</em>), not full web addresses.</p>
+    </div>
+    <div class="card">
+      <h3>Tasks don't tick themselves off in the Desktop Tester</h3>
+      <p class="small muted">The prototype probably changes screens without changing its address, or its buttons have no ids. Send the <strong>Make it test-ready</strong> prompt from the Level 1 prompt library, or this one:</p>
+      <div class="copy-wrap"><div class="prompt" id="helpTestReady" style="font-size:12.5px">Update this prototype so it works with the Desktop Tester app (a frame about 900px wide on a laptop). Give every screen its own URL hash, e.g. #home, #checkout, including success screens, and make every link and button that moves screen change the hash. Only reach a success screen once the action has really worked. Show the full desktop layout from 860px wide, with no burger menu. Give every important button a short, unique id. Don't change anything else. Then list every screen hash and button id in two tables.</div><button class="btn sm" data-copy="#helpTestReady">Copy</button></div>
+    </div>
+    <div class="card">
       <h3>It doesn't look like the design system</h3>
       <p class="small muted">Ask Claude to replace any custom-styled parts with the design system's own components, then compare against the system's component pages. You're the quality check.</p>
     </div>
@@ -773,7 +816,7 @@ body[data-plan="free"] [data-plan="pro"],body[data-plan="pro"] [data-plan="free"
 </section>
 </main>
 
-<footer>VibeProto · Prompt Studio · Levels 1 and 2 · Free and Pro editions · Single HTML file · Design systems are their owners' work under their own open-source licences · Check your module's AI-use policy</footer>
+<footer>VibeProto · Prompt Studio · Levels 1 and 2 · Free and Pro editions · One-file or multi-page prototypes · Design systems are their owners' work under their own open-source licences · Check your module's AI-use policy</footer>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -791,6 +834,7 @@ function apply(){
   document.querySelectorAll('[data-setlevel]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.setlevel===V.level));
   document.querySelectorAll('[data-setplan]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.setplan===V.plan));
   document.querySelectorAll('.ed-label').forEach(e=>e.textContent=`Level ${V.level} · ${V.plan==='pro'?'Claude Pro':'Free plan'} edition`);
+  document.querySelectorAll('.vp-video video').forEach(v=>{if(v.offsetParent===null)v.pause()});
 }
 document.querySelectorAll('[data-setlevel]').forEach(b=>b.addEventListener('click',()=>{V.level=b.dataset.setlevel;save();apply();window.scrollTo({top:0})}));
 document.querySelectorAll('[data-setplan]').forEach(b=>b.addEventListener('click',()=>{V.plan=b.dataset.setplan;save();apply();document.dispatchEvent(new CustomEvent('vp:plan'))}));
@@ -803,6 +847,48 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
   window.scrollTo({top:0});location.reload();
 });
 apply();
+
+/* ---------- Output format and Desktop Tester text, shared by both levels ---------- */
+window.VPF={
+  fmtLines:function(fmt,cdn){
+    if(fmt==='pages')return [
+      '- Separate files: one HTML file per screen, named after the screen in lowercase with dashes (e.g. search-results.html), with index.html as the first screen.',
+      '- Put all the styles in one shared style.css and all the JavaScript in one shared script.js. The only external files allowed are '+cdn+'.',
+      '- Link between pages with relative links only (e.g. href="checkout.html"), never full web addresses.',
+      '- Keep anything that must carry across pages, such as a basket or details someone has entered, in localStorage.',
+      '- Give me each file separately with its file name, then tell me how to arrange them in one folder.'];
+    return [
+      '- One single, self-contained HTML file with all CSS and JavaScript inline in <style> and <script> tags.',
+      '- The only external files allowed are '+cdn+'.'];
+  },
+  testBlock:function(fmt){
+    const nav=fmt==='pages'
+      ?'- Each screen is its own page, as above. Move between screens with real links or by setting location.href, never by swapping content with JavaScript.'
+      :'- Give every screen its own URL hash, using a short lowercase name based on what the screen is (e.g. #home, #checkout). Show the right screen when the hash changes, and the first screen if there is no hash. Every link and button that moves to another screen must change the hash.';
+    return 'TESTING (it will be user tested in the Desktop Tester app, shown in a frame about 900px wide on a laptop)\n'+nav+
+      '\n- Only reach a success or confirmation screen once the action has really worked, e.g. after the form passes validation.'+
+      '\n- Give every important button and link a short, unique id in lowercase with dashes (e.g. id="confirm-booking"). Where the same button repeats in a list, add the item to the id (e.g. id="view-room-3b"), and make each button’s text unique on its screen.'+
+      '\n- Show the full desktop layout from 860px wide, including the full navigation with no burger menu.'+
+      '\n- Don’t use alert(), confirm(), prompt(), window.top, or new windows or tabs.';
+  },
+  tables:function(fmt){
+    return 'Then give me two short tables for setting up the Desktop Tester: every screen ('+(fmt==='pages'?'its page file name':'its #hash')+') and what it shows, and every important button id and what it does.';
+  },
+  projLines:function(fmt,test,cdn){
+    let a=fmt==='pages'
+      ?'- Produce separate files: one HTML page per screen (index.html first), one shared style.css and one shared script.js, linked with relative links only. The only external files allowed are '+cdn+'.'
+      :'- Produce one self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are '+cdn+'.';
+    if(test)a+='\n- Keep it ready for the Desktop Tester app: '+(fmt==='pages'?'one page per screen with real links':'a URL hash for every screen')+', unique ids on important buttons, success screens only after the action has worked, the desktop layout from 860px wide, and no alert() or new windows.';
+    return a;
+  },
+  note:function(fmt,test,device){
+    const n=[];
+    if(fmt==='pages')n.push('Separate pages: Claude gives you several files. Save them all in one folder and open index.html in Chrome or Edge, because links between pages don’t work in Claude’s preview. More files also use more of your allowance.');
+    if(test&&device&&device!=='desktop'&&device!=='both')n.push('⚠ The Desktop Tester runs on laptops and desktops only. Choose "Desktop / laptop" or "Both" as the device.');
+    return n.join(' ');
+  },
+  params:(function(){const q=new URLSearchParams(location.search);return{format:/^(single|pages)$/.test(q.get('format')||'')?q.get('format'):null,test:q.get('test')==='1'?true:(q.get('test')==='0'?false:null)}})()
+};
 })();
 </script>
 <script>
@@ -899,6 +985,14 @@ const DS=[
   prompt:'IBM Carbon, loaded from a public CDN (the carbon-components CSS from jsDelivr is simplest). Use Carbon components for forms, buttons, tables and notifications.',
   head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/carbon-components@10.59.2/css/carbon-components.min.css"><style>body{font-family:"IBM Plex Sans",Arial,sans-serif;padding:16px;margin:0}h2{font-weight:400;margin:0 0 16px}.bx--form-item{margin-bottom:16px}.bx--inline-notification{margin-top:16px;max-width:none}</style>',
   body:'<h2>Book a study room</h2><div class="bx--form-item"><label class="bx--label" for="n">Your name</label><input class="bx--text-input" id="n" type="text" placeholder="e.g. Sam Patel"></div><button class="bx--btn bx--btn--primary" type="button">Find rooms</button><div class="bx--inline-notification bx--inline-notification--info bx--inline-notification--low-contrast" role="status"><div class="bx--inline-notification__details"><div class="bx--inline-notification__text-wrapper"><p class="bx--inline-notification__subtitle">Room 3B is free 2–4pm today.</p></div></div></div>'},
+ {id:'primer',name:'Primer (GitHub)',org:'GitHub',tags:['components'],licence:'MIT',
+  good:'CSS only, so there’s no JavaScript to break. Dense, calm layouts with boxes, labels, tabs and alerts, and a familiar GitHub feel.',
+  watch:'Built for developer tools, so it can feel technical for consumer apps. Stick to version 21: newer versions dropped the alert, label and tab styles.',
+  best:'Developer tools, dashboards and content-heavy apps.',
+  docs:'https://primer.style',
+  prompt:'Primer CSS version 21.5.1 (GitHub’s design system), loaded from https://cdn.jsdelivr.net/npm/@primer/css@21.5.1/dist/primer.css. Add data-color-mode="light" data-light-theme="light" to the <html> tag. Use Primer classes such as btn, btn-primary, form-control, Box, flash, Label and UnderlineNav, and write small vanilla JavaScript only where interaction is needed. Use a generic header, not GitHub’s logo or name.',
+  head:'<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@primer/css@21.5.1/dist/primer.css">',
+  body:'<div data-color-mode="light" data-light-theme="light" style="padding:16px;min-height:100vh;box-sizing:border-box"><h2 class="h3 mb-3">Book a study room</h2><div class="form-group"><div class="form-group-header"><label for="n">Your name</label></div><div class="form-group-body"><input class="form-control input-block" id="n" type="text" placeholder="e.g. Sam Patel"></div></div><button class="btn btn-primary" type="button">Find rooms</button> <span class="Label Label--success ml-2">3 free</span><div class="flash mt-3">Room 3B is free 2–4pm today.</div></div>'},
  {id:'material',name:'Material Web',org:'Google',tags:['webcomp'],licence:'Apache-2.0',
   good:'Familiar Android-style look; users recognise its patterns.',
   watch:'The library is in maintenance mode — fine for prototypes, less so for real products.',
@@ -966,13 +1060,15 @@ $('#dsGrid').addEventListener('click',e=>{
 });
 
 /* ---------- Prompt builder ---------- */
-const FIELDS=['pName','pUsers','pTask','pScreens','pData','pDevice','pFidelity','oPlan','oReset','oExplain'];
+if(VPF.params.format)state.form.pFormat=VPF.params.format;if(VPF.params.test!==null)state.form.oTest=VPF.params.test;
+const FIELDS=['pName','pUsers','pTask','pScreens','pData','pDevice','pFidelity','pFormat','oTest','oPlan','oReset','oExplain'];
 FIELDS.forEach(id=>{
   const el=$('#'+id);const v=state.form[id];
   if(v!==undefined){if(el.type==='checkbox')el.checked=v;else el.value=v}
   el.addEventListener('input',()=>{state.form[id]=el.type==='checkbox'?el.checked:el.value;save();buildPrompt()});
 });
 function val(id,ph){const v=$('#'+id).value.trim();return v||ph}
+$('#oTest').addEventListener('change',()=>{if($('#oTest').checked&&$('#pDevice').value==='mobile'){$('#pDevice').value='desktop';state.form.pDevice='desktop';save();buildPrompt();toast('Device set to Desktop / laptop for the Desktop Tester')}});
 function buildPrompt(){
   const d=DS.find(x=>x.id===state.ds);
   const dsLine=d?d.prompt:'[choose a design system above]';
@@ -980,15 +1076,16 @@ function buildPrompt(){
   const device={mobile:'Design mobile-first for a 375px-wide phone screen; it should still work on a laptop.',desktop:'Design for a laptop screen (around 1280px wide); it should not break on a phone.',both:'Make it fully responsive so it works equally well on a 375px phone and a 1280px laptop.'}[$('#pDevice').value];
   const fid={low:'Low fidelity: greyscale only, simple placeholder boxes instead of images, so people focus on the flow rather than looks.',mid:'Mid fidelity: use the design system\u2019s default look with neutral colours and realistic text; use simple coloured boxes instead of photos.',high:'High fidelity: polished and branded, with a consistent accent colour and realistic content; still no real photos (use coloured boxes or simple SVG icons).'}[$('#pFidelity').value];
   const extras=[];
-  if($('#oReset').checked)extras.push('- Add a small "Reset prototype" link in the footer that returns to the first screen and clears any entered data, so I can start again cleanly.');
+  const fmt=$('#pFormat').value,test=$('#oTest').checked;
+  if($('#oReset').checked)extras.push('- Add a small "Reset prototype" link in the footer that returns to the first screen and clears any entered data'+(fmt==='pages'?' (including anything saved in localStorage)':'')+', so I can start again cleanly.');
+  $('#fmtNote1').textContent=VPF.note(fmt,test,$('#pDevice').value);
   const data=$('#pData').value.trim();
   let p=`I'm a UX student who doesn't write code. Please build a clickable prototype.
 
 FORMAT
-- One single, self-contained HTML file with all CSS and JavaScript inline in <style> and <script> tags.
-- The only external files allowed are the design system's official CDN files.
-- No server, database, login or real APIs. Fake any saving or searching with JavaScript and in-memory data.
-- Show it to me as an artifact so I can preview it.${isPro()?'\n- Follow the Project instructions as well; if anything here conflicts, this message wins.':''}
+${VPF.fmtLines(fmt,"the design system's official CDN files").join('\n')}
+- No server, database, login or real APIs. Fake any saving or searching with JavaScript and ${fmt==='pages'?'browser storage':'in-memory data'}.
+- ${fmt==='pages'?'Show index.html as an artifact if you can, so I can preview the first screen.':'Show it to me as an artifact so I can preview it.'}${isPro()?'\n- Follow the Project instructions as well; if anything here conflicts, this message wins.':''}
 
 DESIGN SYSTEM
 - Use ${dsLine}
@@ -1009,6 +1106,7 @@ REQUIREMENTS
 - ${device}
 - ${fid}
 ${extras.length?extras.join('\n')+'\n':''}- Add comments in the code marking where each screen starts, so I can describe the structure in my report.`;
+  if(test)p+=`\n\n${VPF.testBlock(fmt)}`;
   if($('#oPlan').checked)p+=`
 
 BEFORE YOU BUILD
@@ -1016,9 +1114,10 @@ List the screens and the main components you'll use from the design system in no
   if($('#oExplain').checked)p+=`
 
 AFTER YOU BUILD
-In 3–5 plain-English sentences (no code), tell me how to walk through the main task and anything you had to assume.`;
+In 3–5 plain-English sentences (no code), tell me how to walk through the main task and anything you had to assume.${test?' '+VPF.tables(fmt):''}`;
+  else if(test)p+=`\n\nAFTER YOU BUILD\n${VPF.tables(fmt)}`;
   $('#promptOut').textContent=p;
-  const pi=$('#projInstr1');if(pi)pi.textContent=projText1(dsLine);
+  const pi=$('#projInstr1');if(pi)pi.textContent=projText1(dsLine,fmt,test);
   const words=p.split(/\s+/).length;
   $('#promptStats').textContent=`${words} words · ${d?'Design system: '+d.name:'⚠ No design system selected yet'}`;
 }
@@ -1039,10 +1138,10 @@ $('#exampleBtns').addEventListener('click',e=>{
 /* setup checklist */
 $$('[data-setup]').forEach(c=>{c.checked=!!state.setup[c.dataset.setup];c.addEventListener('change',()=>{state.setup[c.dataset.setup]=c.checked;save()})});
 
-function projText1(dsLine){return `This Project is a UX student's prototype. The student does not write code.
+function projText1(dsLine,fmt,test){return `This Project is a UX student's prototype. The student does not write code.
 
 Always:
-- Produce one self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are the design system's official CDN files.
+${VPF.projLines(fmt||'single',!!test,"the design system's official CDN files")}
 - Use ${dsLine}
 - Use realistic fake content in UK English. No lorem ipsum and no real people's data.
 - Keep everything needed for the main task working. Anything else shows "This part isn't in the prototype yet."
@@ -1064,7 +1163,10 @@ const LIB=[
  {t:'Realistic errors',use:'Forms',p:'Add realistic validation to [the form] using {DS} error patterns: empty required fields, an invalid email, and [another case]. Show an error summary at the top and an inline message next to each field. Only show errors after the user submits.'},
  {t:'Final check',use:'Before you share',p:'Do a final check of this prototype: replace any placeholder text with realistic content, make sure every step of this task works — [paste task] — and that "Back" never loses entered data. Anything outside the task should say "This part isn\u2019t in the prototype yet."'},
  {t:'Explain it to me',use:'Describing your prototype',p:'Without showing any code, explain in plain English how this prototype is organised: the screens, how users move between them, and which {DS} components each screen uses. Keep it under 150 words.'},
- {t:'Handover to a new chat',plan:'free',use:'Long chat or usage limit',p:'Write a handover brief I can paste into a new chat to keep working on this prototype. Include the purpose, users, main task, design system ({DS}), the screens, decisions we\u2019ve made, and changes still to do. Keep it under 200 words. Don\u2019t include code — I\u2019ll attach the HTML file.'},
+ {t:'Make it test-ready',use:'Before testing in the Desktop Tester',p:'Update this prototype so it works with the Desktop Tester app, which shows it in a frame about 900px wide on a laptop and ticks tasks off when the page address changes or a particular button is clicked. 1) Give every screen its own URL hash with a short lowercase name, e.g. #home, #checkout, including success screens, and make every link and button that moves screen change the hash. (If the prototype is separate pages, keep one page per screen with real links instead.) 2) Only reach a success screen once the action has really worked. 3) Show the full desktop layout from 860px wide, with no burger menu. 4) Give every important button a short, unique id; in lists, add the item to the id. Don’t change the design, content or anything else. Then list every screen hash (or page name) and every button id in two tables.'},
+ {t:'Split into separate pages',use:'Changing the output format',p:'Split this prototype into separate files: one HTML page per screen named after the screen (index.html first), one shared style.css and one shared script.js. Use relative links between pages and keep anything that carries across pages in localStorage. Don’t change the design, content or behaviour. Give me each file with its name.'},
+ {t:'Combine into one file',use:'Changing the output format',p:'Combine these files into one self-contained HTML file with all the CSS in a <style> tag and all the JavaScript in a <script> tag. Each former page becomes a screen with its own URL hash. Don’t change the design, content or behaviour.'},
+ {t:'Handover to a new chat',plan:'free',use:'Long chat or usage limit',p:'Write a handover brief I can paste into a new chat to keep working on this prototype. Include the purpose, users, main task, design system ({DS}), the output format (one HTML file or separate pages), the screens, decisions we\u2019ve made, and changes still to do. Keep it under 200 words. Don\u2019t include code — I\u2019ll attach the HTML file.'},
  {t:'Update the Project',plan:'pro',use:'Before starting a new chat',p:'List the design decisions we\u2019ve made in this chat as short bullet points I can add to the Project instructions, so new chats in this Project start with them. Include anything about {DS} components we agreed to use or avoid. Under 120 words, no code.'}
 ];
 function renderLib(){
@@ -1213,6 +1315,11 @@ $('#fillFromSummary').addEventListener('click',()=>{
 /* settings */
 ['cDevice','cFid'].forEach(id=>{const el=$('#'+id);if(S.f&&S.f[id]!==undefined&&el.querySelector(`option[value="${S.f[id]}"]`))el.value=S.f[id];el.addEventListener('change',()=>{S.f[id]=el.value;save();dsHint()})});
 ['cSwitch','cAsk'].forEach(id=>{const el=$('#'+id);if(S.f&&S.f[id]!==undefined)el.checked=S.f[id];el.addEventListener('change',()=>{S.f[id]=el.checked;save()})});
+S.f=S.f||{};if(VPF.params.format)S.f.cFormat=VPF.params.format;if(VPF.params.test!==null)S.f.cTest=VPF.params.test;
+function fmtNote2(){$('#fmtNote2').textContent=VPF.note($('#cFormat').value,$('#cTest').checked,$('#cDevice').value)}
+{const f=$('#cFormat');if(S.f.cFormat)f.value=S.f.cFormat;f.addEventListener('change',()=>{S.f.cFormat=f.value;save();fmtNote2();dsHint()});
+ const t=$('#cTest');if(S.f.cTest!==undefined)t.checked=!!S.f.cTest;t.addEventListener('change',()=>{S.f.cTest=t.checked;if(t.checked&&$('#cDevice').value==='mobile'){$('#cDevice').value='desktop';S.f.cDevice='desktop';toast('Device set to Desktop / laptop for the Desktop Tester')}save();fmtNote2();dsHint()});
+ $('#cDevice').addEventListener('change',fmtNote2);fmtNote2();}
 function dsHint(){const el=$('#dsCurrent2');if(el){const d=dsObj();el.textContent=d?d.name:'none yet'}if(typeof updateProj==='function')updateProj()}
 
 /* assemble */
@@ -1222,6 +1329,7 @@ function compose(){
   const dev={mobile:'Design mobile-first for a 375px-wide phone; it should still work on a laptop.',desktop:'Design for a laptop screen (about 1280px wide); it should not break on a phone.',both:'Make it fully responsive for a 375px phone and a 1280px laptop.',kiosk:'Design for a large touchscreen kiosk: touch targets of at least 48px and no hover-only interactions.',tablet:'Design for a tablet held in either orientation, with touch-friendly targets.'}[$('#cDevice').value];
   const fid={low:'Low fidelity: greyscale, simple boxes instead of images, so people focus on the flow.',mid:'Mid fidelity: the design system’s default look, neutral colours, realistic text, simple coloured boxes instead of photos.',high:'High fidelity: polished, with one consistent accent colour, realistic content and simple SVG icons (no real photos).'}[$('#cFid').value];
   const list=(id,num)=>L(id).map((x,i)=>(num?`${i+1}. `:'- ')+x).join('\n');
+  const fmt=$('#cFormat').value,test=$('#cTest').checked;
   let p=`I'm a UX student who doesn't write code. Build a clickable prototype.
 
 THE IDEA
@@ -1248,8 +1356,8 @@ WHO AND WHY
   p+=`
 
 FORMAT
-- One self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are from public CDNs.
-- Show it as an artifact so I can preview it.
+${VPF.fmtLines(fmt,'from public CDNs').join('\n')}
+- ${fmt==='pages'?'Show index.html as an artifact if you can, so I can preview the first screen.':'Show it as an artifact so I can preview it.'}
 
 DESIGN SYSTEM
 - Use ${dsLine()}
@@ -1261,7 +1369,9 @@ REQUIREMENTS
 - ${dev}
 - ${fid}
 - Mark where each screen starts with a code comment.`;
+  if(test)p+=`\n\n${VPF.testBlock(fmt)}`;
   if($('#cAsk').checked)p+=`\n\nBEFORE YOU BUILD\nAsk me up to 3 questions about anything unclear or risky in this brief. Then list the screens in no more than 8 bullet points and wait for me to say "go".`;
+  if(test)p+=`\n\nAFTER YOU BUILD\n${VPF.tables(fmt)}`;
   return p;
 }
 function toWork(){
@@ -1282,7 +1392,7 @@ function projText(){
   return `This Project is a UX student's prototype. The student does not write code.
 
 Always:
-- Produce one self-contained HTML file with all CSS and JavaScript inline. The only external files allowed are from public CDNs.
+${VPF.projLines($('#cFormat').value,$('#cTest').checked,'from public CDNs')}
 - Use ${dsLine()}
 - Use realistic fake content in UK English. Never collect real passwords, card numbers or personal data, and label fake sign-in or payment screens "Prototype — don't enter real details".
 - Everything needed for the main task must work. Anything else shows "This part isn't in the prototype yet."
@@ -1299,7 +1409,7 @@ $('#dlScenario').addEventListener('click',()=>{
   const filled=ORDER.filter(id=>(S.c[id]||'').trim());
   if(!filled.length){toast('Your canvas is empty');return}
   
-  const md='# Scenario\n\n'+ORDER.map(id=>{const v=(S.c[id]||'').trim();if(!v)return '';const L=lines(v);return `## ${LABELS[id]}\n\n`+(L.length>1?L.map(x=>'- '+x).join('\n'):v)+'\n'}).filter(Boolean).join('\n')+`\n## Build settings\n\n- Design system: ${dsName()}\n- Device: ${$('#cDevice').selectedOptions[0].text}\n- Fidelity: ${$('#cFid').selectedOptions[0].text}\n`;
+  const md='# Scenario\n\n'+ORDER.map(id=>{const v=(S.c[id]||'').trim();if(!v)return '';const L=lines(v);return `## ${LABELS[id]}\n\n`+(L.length>1?L.map(x=>'- '+x).join('\n'):v)+'\n'}).filter(Boolean).join('\n')+`\n## Build settings\n\n- Design system: ${dsName()}\n- Device: ${$('#cDevice').selectedOptions[0].text}\n- Fidelity: ${$('#cFid').selectedOptions[0].text}\n- Output format: ${$('#cFormat').selectedOptions[0].text}\n- Ready for Desktop Tester: ${$('#cTest').checked?'yes':'no'}\n`;
   download('scenario.md',md,'text/markdown');
 });
 
@@ -1307,7 +1417,7 @@ $('#dlScenario').addEventListener('click',()=>{
 const CHECKS=[
  {l:'Names the users',re:/\b(users?|students?|customers?|people|visitors?|workers?|parents?|patients?|staff|owners?|drivers?)\b/i,tip:'Who is this for? One sentence about the user changes a lot of design decisions.'},
  {l:'States a clear task',re:/\b(task|so that|be able to|achieve|complete|success|goal)\b/i,tip:'Add the main task users must complete, with a clear end point.'},
- {l:'Specifies the output format',re:/\b(html|single file|one file|inline|self-contained|artifact)\b/i,tip:'Say "one self-contained HTML file with inline CSS and JavaScript".'},
+ {l:'Specifies the output format',re:/\b(html|single file|one file|inline|self-contained|artifact|separate pages|separate files|style\.css)\b/i,tip:'Say "one self-contained HTML file with inline CSS and JavaScript", or ask for separate pages with a shared style.css and script.js.'},
  {l:'Chooses a visual system',re:/\b(design system|pico|bootstrap|gov\.?uk|nhs|uswds|bulma|shoelace|carbon|material|plain html|style guide)\b/i,tip:'Name a design system, or ask for a plain, consistent style.'},
  {l:'Covers states',re:/\b(empty|loading|error|offline|success|state|no results)\b/i,tip:'What happens when there’s nothing there, it’s loading, or it goes wrong?'},
  {l:'Uses fake content',re:/\b(fake|sample|realistic|dummy|mock|placeholder content|example data)\b/i,tip:'Ask for realistic fake content, so users react to something believable and nothing real is collected.'},

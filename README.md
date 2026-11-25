@@ -14,8 +14,9 @@ The skill you practise is **specifying and steering**, not programming. Claude w
 | --- | --- |
 | [`index.html`](index.html) | **Guided audio walkthrough.** A narrator takes you through the whole workflow one step at a time. It shows the diagram for each step and pauses when it's your turn to act. |
 | [`vibe-coding-prompt-studio.html`](vibe-coding-prompt-studio.html) | **Prompt Studio.** The workspace where you choose a design system, plan your prototype, build your prompt and copy follow-up prompts. |
+| [`videos/`](videos) | **Video walkthroughs.** Four short narrated videos (`l1-free`, `l1-pro`, `l2-free`, `l2-pro`) filmed on the Prompt Studio, each with a poster image (`.jpg`) and captions (`.vtt`). The Studio shows the one that matches the chosen level and plan, under the page title. |
 
-Both are single, self-contained HTML files, with no build step, server or install. Each page links to the other: **🎧 Audio guide** in the Studio and **✏️ Prompt Studio** in the guide. The link opens in a new tab with the same level and plan already selected, passed as `?level=1|2&plan=free|pro`.
+Both are single, self-contained HTML files, with no build step, server or install. Each page links to the other: **🎧 Audio guide** in the Studio and **✏️ Prompt Studio** in the guide. The link opens in a new tab with the same level and plan already selected, passed as `?level=1|2&plan=free|pro`. The Studio also accepts `&format=single|pages` and `&test=1|0`, so another resource (such as the Desktop Tester guide) can link straight to a pre-set builder.
 
 The intended way to use them is side by side. Listen to the guide in one tab and do each step in the Studio in the other.
 
@@ -34,7 +35,7 @@ Both pages have the same switches at the top. Changing them changes the narratio
 | **Prompting** | One clear recipe, plus a library of follow-up prompts | Edit the prompt freely, add reusable patterns, check it against a quality gate |
 | **Scope** | Set by the recipe | Set by you, and you should be able to explain every decision |
 
-Both levels share the same rules: **one self-contained HTML file, and fake data only.**
+Both levels share the same rules: **fake data only**, and an output format you choose: **one self-contained HTML file** (the default) or **separate pages**. Either can be made ready for the [Desktop Tester](https://github.com/martinsolent/desktop_tester) user testing app.
 
 ### Claude plans
 
@@ -56,13 +57,15 @@ There are five stages: **Pick → Plan → Prompt → Fix → Finish.** The audi
 1. **Get set up.** Sign in at claude.ai, check that Artifacts is switched on in Settings, and create a folder for your versions (v1, v2, v3…). On Pro, also create a Project.
 2. **Choose a design system.** Start from your task, not from what looks nicest (see [Design systems](#design-systems)).
 3. **Plan before you build.** Narrow down from a realistic scenario, to one main task with a clear end point, to only the screens that task needs.
-4. **Use the prompt builder.** Enter your idea, users, main task, screens and example content, then choose the device and fidelity. Three example buttons (📅 room booking app, 🪴 plant-care tracker, 📊 café sales dashboard) fill in the form so you can see a finished prompt. The generated prompt has six parts:
-   - **Format:** one HTML file with inline CSS and JavaScript, and no server
+4. **Use the prompt builder.** Enter your idea, users, main task, screens and example content, then choose the device, fidelity and output format, and whether it should be ready for the Desktop Tester. Three example buttons (📅 room booking app, 🪴 plant-care tracker, 📊 café sales dashboard) fill in the form so you can see a finished prompt. The generated prompt has six parts:
+   - **Format:** one HTML file with inline CSS and JavaScript, or separate pages with a shared `style.css` and `script.js`, and no server
    - **Design system:** real components
    - **The prototype:** users, main task, screens and fake content
    - **Requirements:** the task must work, and the prototype must be accessible and suit the device
    - **Before you build:** a plan first
    - **After you build:** a plain-English walk-through
+
+   Ticking **Ready for Desktop Tester** adds a seventh part, **Testing**: an address for every screen (a `#hash` in one file, a page in separate pages), unique button ids, success screens only after the action works, and the desktop layout from 860px wide. Claude then lists every screen and button id, ready to paste into the Desktop Tester's builder.
 5. **Build version 1.** Paste the prompt, check Claude's plan, then reply `go`. Click through the task, note every problem, and download the file as v1 *before* asking for any changes.
 6. **Fix in small, precise steps.** Describe the symptom rather than guessing the fix. Change one thing at a time, and say what must *not* change. After every change, click through the whole task again. Save the result as v2.
 7. **Finish and share.** Run the accessibility pass, check the prototype yourself using only the keyboard, run the final check, download it, publish a share link, and keep a plain-English description with the file.
@@ -76,11 +79,11 @@ This is the studio loop: **Define → Craft → Gate → Build → Refine**, the
   - **B · The task:** main task, success statements (Given / When / Then), screens
   - **C · How it behaves:** features, states and edge cases, constraints and accessibility, what to fake, what's out of scope
 - **Let Claude interview you.** If you're stuck, copy the interview prompt into a new chat with your rough idea. Claude asks about 8–10 questions, one at a time, then writes a summary. Paste the summary back and press **Fill canvas**.
-- **Build settings.** Choose the device (mobile, desktop, responsive, kiosk or tablet) and fidelity, plus two options: a hidden **Shift+S** state switcher, and asking Claude to question you and plan before building.
+- **Build settings.** Choose the device (mobile, desktop, responsive, kiosk or tablet), fidelity and output format (one HTML file or separate pages), and whether it should be **Ready for Desktop Tester**, plus two options: a hidden **Shift+S** state switcher, and asking Claude to question you and plan before building.
 - **Project kit (Pro).** Copy the Project instructions and download `scenario.md` for the Project's knowledge. Use one chat per job: interview, build v1, variants, fixes.
 - **Workspace and quality gate.** Assemble the prompt from your canvas, then edit it freely or write your own. The gate scores it out of 10 for: users, a clear task, output format, a design system, states, fake content, accessibility, a scope fence, the device, and a check before building. Aim for 8/10 on build prompts. The gate gives advice and never blocks you.
 - **Prompt patterns.** Ten reusable prompt shapes (listed [below](#prompt-library-and-patterns)).
-- **Fake it honestly.** How to simulate the parts a single HTML file can't really do.
+- **Fake it honestly.** How to simulate the parts a prototype made of HTML files can't really do.
 - **Troubleshooting.** Fixes for the most common problems.
 
 ---
@@ -98,6 +101,7 @@ The Studio offers these, each with a live preview and a **Select** button that w
 | GOV.UK Design System | MIT (code) | Form-heavy or step-by-step services |
 | NHS.UK Design System | MIT (code) | Health and care services |
 | U.S. Web Design System | Public domain | Form-heavy or step-by-step services |
+| Primer (GitHub) | MIT | Developer tools, dashboards and content-heavy apps (pinned to version 21.5.1, which still has alerts, labels and tabs) |
 | Shoelace | MIT | A modern, app-like feel |
 | Material Web | Apache-2.0 | Mobile-app-style prototypes |
 | Tailwind CSS | MIT | Custom-looking apps (ask Claude for one accent colour and consistent spacing) |
@@ -107,7 +111,7 @@ To choose quickly, work down this list and take the first yes:
 
 1. Is it a health or care service? Use **NHS.UK**.
 2. Is it form-heavy or a step-by-step service? Use **GOV.UK** or **USWDS**.
-3. Does it have dashboards, tables or lots of components? Use **Bootstrap** or **Carbon**.
+3. Does it have dashboards, tables or lots of components? Use **Bootstrap** or **Carbon** (or **Primer** for a developer tool).
 4. Is it your first prototype, and you want the fewest problems? Use **Pico** or **Bulma**.
 5. Do you want a modern, app-like feel? Use **Shoelace** or **Material**.
 
@@ -125,6 +129,8 @@ To choose quickly, work down this list and take the first yes:
 - **Accessibility pass** (a WCAG 2.2 AA review and fix)
 - **Final check** (the task works end to end, with no placeholders)
 - **Explain it to me** (a plain-English description, under 150 words)
+- **Make it test-ready** (fix an existing prototype for the Desktop Tester)
+- **Split into separate pages** / **Combine into one file** (change the output format)
 - **Handover to a new chat**
 - **Update the Project** (Pro)
 
@@ -160,6 +166,7 @@ To choose quickly, work down this list and take the first yes:
 - **Diagrams view.** All the diagrams for the current level and plan in one place, without narration. Each has a **Download SVG** button for use in slides, and exports keep the current light or dark theme.
 - **Dictation.** In the Studio, a 🎤 button on form fields lets you speak instead of type. Say "new line", "comma" or "full stop" for punctuation. Your browser may send the audio to its speech service, so don't dictate personal details.
 - **Saved progress.** Your answers, level, plan and view are saved in your browser's `localStorage`, so they're still there when you come back. Nothing is sent to a server. **↺ Reset** clears the Studio.
+- **Video walkthroughs.** A 1½-minute narrated video under the title of each level, matching the plan you've chosen. Captions are on by default, and switching level or plan pauses the video.
 - **Light and dark themes** with the ◐ button, a skip link, and keyboard-accessible controls.
 
 ### External resources
@@ -195,6 +202,8 @@ The site is served by GitHub Pages from the `main` branch. After you push, Pages
 | A button does nothing | Describe the symptom: what you clicked, what you expected and what happened. Ask Claude to fix only that. |
 | The response stopped halfway | Reply *"Continue from exactly where you stopped."* For big prototypes, build one flow at a time. |
 | You've hit your usage limit | Download what you have, click through it and plan your next prompts. Then start a fresh chat with the latest HTML attached and a short summary. |
+| Links between pages don't work in the preview | Normal for separate pages: Claude's preview shows one file at a time. Save every file in one folder and open `index.html` in Chrome or Edge. |
+| Tasks don't tick themselves off in the Desktop Tester | Send the **Make it test-ready** prompt, then use the screen and button tables Claude gives you. |
 | It doesn't look like the design system | Use the **Stay on-system** prompt, then compare against the design system's own component pages. |
 
 ---

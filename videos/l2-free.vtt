@@ -1,0 +1,67 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:03.707
+This is Level 2 of the Prompt Studio, on the free plan.
+
+00:00:03.707 --> 00:00:05.571
+In Level 1 you followed a recipe.
+
+00:00:05.571 --> 00:00:10.260
+Here you write your own: define a scenario, craft the prompt, check it, then build.
+
+00:00:11.800 --> 00:00:17.221
+On the free plan, usage refills over a few hours, and open ended prompting uses it fastest.
+
+00:00:17.221 --> 00:00:21.570
+So plan before you prompt, keep builds small, and download every version.
+
+00:00:23.067 --> 00:00:25.282
+The scenario canvas has twelve parts.
+
+00:00:25.282 --> 00:00:30.610
+Each one has a coaching question, examples you can reveal, and live feedback as you type.
+
+00:00:30.610 --> 00:00:31.987
+Green means it's clear.
+
+00:00:33.500 --> 00:00:33.834
+Stuck?
+
+00:00:33.834 --> 00:00:36.169
+Copy the interview prompt into a new chat.
+
+00:00:36.169 --> 00:00:39.672
+Claude asks you questions one at a time, then writes a summary.
+
+00:00:39.672 --> 00:00:42.230
+Paste the summary here, and press Fill canvas.
+
+00:00:44.167 --> 00:00:48.355
+Choose a design system, then pick the device, fidelity and output format.
+
+00:00:48.355 --> 00:00:52.487
+Tick Ready for Desktop Tester if you'll test your prototype in that app.
+
+00:00:54.700 --> 00:00:55.877
+Press Assemble prompt.
+
+00:00:55.877 --> 00:01:00.800
+Your canvas becomes a full prompt in the workspace, and it's yours to edit however you like.
+
+00:01:02.333 --> 00:01:05.683
+The quality gate scores your prompt out of ten as you edit.
+
+00:01:05.683 --> 00:01:08.237
+Aim for eight before you send a build prompt.
+
+00:01:08.237 --> 00:01:09.883
+Then copy it into a new chat.
+
+00:01:11.400 --> 00:01:15.812
+For follow ups, use the prompt patterns, such as three variants or a scope fence.
+
+00:01:15.812 --> 00:01:19.353
+And check Fake it honestly for anything that would need a server.
+
+00:01:19.353 --> 00:01:20.170
+That's Level 2.

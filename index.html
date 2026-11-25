@@ -338,7 +338,7 @@ body[data-view="diagrams"] p.say,body[data-view="diagrams"] .usegrid,body[data-v
     </svg>
     <figcaption><span><span class="fignum"></span>A starting point, not a rule. Justify your final choice in the comparison table.</span><button class="dl" data-name="04-choose-design-system">Download SVG</button></figcaption>
   </figure>
-    <p class="say">Every option has a Preview button, so you can see a sample screen before you choose. There's also Tailwind, a flexible styling toolkit that works well as long as you ask Claude for one accent colour and consistent spacing. And there's a no-design-system option, which always loads, even when other files are blocked.</p>
+    <p class="say">Every option has a Preview button, so you can see a sample screen before you choose. There's Primer, the system behind GitHub, which suits developer tools and dashboards. There's also Tailwind, a flexible styling toolkit that works well as long as you ask Claude for one accent colour and consistent spacing. And there's a no-design-system option, which always loads, even when other files are blocked.</p>
     <p class="say">One warning: the government and N H S code is free to use, but their logos, crown and fonts are not. Claude will be told to use a generic header. When you've decided, press Select, and your choice flows straight into your prompt.</p>
     <p class="say"><span class="cue">Pause here</span> and choose your design system.</p>
   </section>
@@ -366,15 +366,16 @@ body[data-view="diagrams"] p.say,body[data-view="diagrams"] .usegrid,body[data-v
   <section class="seg" data-level="1" id="l1-4">
     <div class="seg-head"><h2 class="say">Step four. Use the prompt builder</h2><button class="seg-play">▶ Play section</button></div>
     <p class="say">Now open the Prompt builder. Type in your idea, your users, the main task, and your screens one per line. Add any example content you'd like. Then choose the device and the fidelity. Mid fidelity is a sensible default.</p>
+    <p class="say">Below those are two more choices. Output format: one H T M L file, which is the default and the easiest to preview and share, or separate pages, with one file per screen plus a shared style sheet and script. And a box called Ready for Desktop Tester. Tick it if you'll run your user test in the Desktop Tester app. It asks Claude to give every screen its own address and every important button its own name, so tasks tick themselves off during the test. The Desktop Tester only runs on laptops and desktops, so the device switches to desktop when you tick it.</p>
     <p class="say">Not sure what to write? Above the prompt there are three example buttons: a room booking app, a plant-care tracker, and a café sales dashboard. Press one to fill the whole form and see the prompt it makes. Try another to compare them. Then replace it with your own idea.</p>
     <p class="say">Leave "confirm a plan before building" ticked. It costs one short exchange and often saves a complete rebuild.</p>
-    <p class="say">The prompt it writes has six parts. Format: one H T M L file, with no server. Design system: so your prototype uses real components. The prototype: users, main task, screens and fake content. Requirements: the task must work, it must be accessible, and it must suit the device. Before you build: a plan first. After you build: a plain English explanation.</p>
+    <p class="say">The prompt it writes has six parts. Format: one H T M L file or separate pages, with no server. Design system: so your prototype uses real components. The prototype: users, main task, screens and fake content. Requirements: the task must work, it must be accessible, and it must suit the device. Before you build: a plan first. After you build: a plain English explanation. If you ticked Ready for Desktop Tester, there's an extra Testing part, and Claude also lists every screen and button name for you to use when you set up the test.</p>
     <p class="say" data-fig="fig-w06">The diagram lays out those six parts in order, with what each one is for.</p>
     <figure class="fig" id="fig-w06">
     <svg viewBox="0 0 600 335" role="img" aria-labelledby="fig-w06-f6t">
       <title id="fig-w06-f6t">Six parts of the prompt: format, design system, the prototype, requirements, before you build, after you build — each with its purpose.</title>
       <rect x="10" y="10" width="150" height="46" rx="8" class="sa"/><text x="85" y="38" text-anchor="middle" class="tx tb" style="font-size:12px">FORMAT</text>
-      <rect x="166" y="10" width="424" height="46" rx="8" class="sb"/><text x="180" y="38" class="tx">One HTML file, inline CSS + JS, no server</text>
+      <rect x="166" y="10" width="424" height="46" rx="8" class="sb"/><text x="180" y="38" class="tx">One HTML file or separate pages, no server</text>
       <rect x="10" y="64" width="150" height="46" rx="8" class="sa"/><text x="85" y="92" text-anchor="middle" class="tx tb" style="font-size:12px">DESIGN SYSTEM</text>
       <rect x="166" y="64" width="424" height="46" rx="8" class="sb"/><text x="180" y="92" class="tx">Real components, so users judge your design</text>
       <rect x="10" y="118" width="150" height="46" rx="8" class="sg"/><text x="85" y="146" text-anchor="middle" class="tx tb" style="font-size:12px">THE PROTOTYPE</text>
@@ -397,6 +398,7 @@ body[data-view="diagrams"] p.say,body[data-view="diagrams"] .usegrid,body[data-v
     <p class="say">Start a new chat<span data-plan="pro"> inside your Project</span> and paste in your prompt. Claude should reply with a short plan, not code. Read it carefully. If anything's wrong, correct it in one reply. When the plan's right, reply with one word: go.</p>
     <p class="say">Your prototype appears in the preview panel. Click through your main task from start to finish, and write down every place it breaks or surprises you. Don't ask for any changes yet.</p>
     <p class="say">Before you do anything else, download the file and save it in your folder as version one. That way, whatever happens next, you can always go back.</p>
+    <p class="say">If you chose separate pages, Claude gives you several files instead of one. Save them all together in one folder, and open index dot H T M L in Chrome or Edge to click through. Links between pages don't work in Claude's preview, so that's normal.</p>
     <p class="say" data-plan="free">If Claude stops halfway through, reply: "Continue from exactly where you stopped." And if you hit your usage limit, don't panic. Download what you have, click through it, and plan your next prompts while your allowance refills.</p>
     <p class="say" data-fig="fig-w07f" data-plan="free">The diagram compares two ways to spend the same budget. A vague prompt followed by full rebuilds runs out fast. A full brief, a plan and small fixes leaves room for version three.</p>
     <figure class="fig" id="fig-w07f" data-plan="free">
@@ -539,7 +541,7 @@ body[data-view="diagrams"] p.say,body[data-view="diagrams"] .usegrid,body[data-v
     </svg>
     <figcaption><span><span class="fignum"></span>From following a recipe to writing your own.</span><button class="dl" data-name="L2-01-recipe-to-studio">Download SVG</button></figcaption>
   </figure>
-    <p class="say">Open the Prompt Studio with the button at the top of this page. It opens in a new tab, already set to Level 2 and your Claude plan. The diagrams and all ten prompt patterns are here too, beside the steps they belong to. The rules from Level 1 still apply: one self-contained file and fake data only. What changes is that you set the scope, and you should be able to explain every choice.</p>
+    <p class="say">Open the Prompt Studio with the button at the top of this page. It opens in a new tab, already set to Level 2 and your Claude plan. The diagrams and all ten prompt patterns are here too, beside the steps they belong to. The rules from Level 1 still apply: one H T M L file, or separate pages if you choose, and fake data only. What changes is that you set the scope, and you should be able to explain every choice.</p>
     <p class="say">The studio loop is: define your scenario, craft the prompt, check it against the quality gate, build it in Claude, and refine it with small, precise follow-ups. Then go round again.</p>
     <p class="say" data-fig="fig-p02">The second diagram shows that loop, with a dotted line back from refining to the craft stage, because going round again is normal.</p>
     <figure class="fig" id="fig-p02">
@@ -690,7 +692,7 @@ body[data-view="diagrams"] p.say,body[data-view="diagrams"] .usegrid,body[data-v
 
   <section class="seg" data-level="2" id="l2-4">
     <div class="seg-head"><h2 class="say">Step four. Design system and settings<span data-plan="pro">, and your Project</span></h2><button class="seg-play">▶ Play section</button></div>
-    <p class="say">Below the canvas, choose your design system in the Design systems section. It's the same picker as Level 1, and every option has a preview, including Tailwind and a no-design-system option. If you pick Tailwind, it's a styling toolkit rather than a full design system, so ask Claude for one accent colour and consistent spacing. Then, in Build settings, choose your device and fidelity.</p>
+    <p class="say">Below the canvas, choose your design system in the Design systems section. It's the same picker as Level 1, and every option has a preview, including Tailwind and a no-design-system option. If you pick Tailwind, it's a styling toolkit rather than a full design system, so ask Claude for one accent colour and consistent spacing. Then, in Build settings, choose your device and fidelity, and your output format: one H T M L file or separate pages. If you'll test your prototype in the Desktop Tester app, tick Ready for Desktop Tester, so tasks can tick themselves off.</p>
     <p class="say">Leave both boxes ticked. The hidden state switcher lets you preview each state by pressing Shift and S. And "ask me and plan before building" protects you from expensive wrong guesses.</p>
     <p class="say" data-plan="pro">Now open the Project kit. Create a Project for this prototype. Copy the Project instructions into it. They hold the studio's rules and update as you edit the canvas. Then download scenario dot M D and upload it to the Project's knowledge. From now on, give each job its own chat in that Project: one for the interview, one to build version one, one for variants, and one for fixes. Re-upload the scenario whenever your canvas changes.</p>
     <p class="say" data-fig="fig-ppj" data-plan="pro">The diagram shows your Level 2 Project. The instructions and knowledge files on the left feed four focused chats on the right.</p>
